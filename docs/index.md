@@ -1,14 +1,21 @@
 # Predb.ovh API documentation
 
-## Description
+Most pre databases websites do not allow data scapping, nor do they offer an API.
 
-Disclaimer : This API has been built for my personal usage, and may not fit your needs. You may fill issues in the Github project, but don't expect too much.
+Having a easily accessible API was a requirement for me, so I built this one using public pre sources.
 
-Disclaimer 2 : Once again, this API does **not** host any content, only metadata associated to scene releases.
+## Disclaimers
+
+Disclaimer : This API has been built for my personal usage, and may not fit your needs. [Github issues](https://github.com/predbdotovh/pre-api/issues) can be filled, but don't expect too much.
+
+Disclaimer 2 : Once again, this API does **NOT** host any content, only metadata associated to scene releases.
+
+Disclaimer 3 : Don't know what scene releases are ? You're probably at the wrong place.
 
 ## Status
 
-This API is currently usable, though not stable and may break at any point.
+This API is currently usable, and used by [demo website](https://predb.ovh/) which is also [open-sourced](https://github.com/predbdotovh/website).
+Please note that this API is not stable yet, and may break at any time.
 
 ## API versions
 
@@ -45,12 +52,75 @@ List releases matching a set of filters given in parameters
 
 * Cache : 60 seconds
 * Usage : Get releases info
+* Rate limit : 30/60s
 
 #### Parameters
-TODO
+All parameters are optional
+
+| param key | type | content |
+| --------- | ---- | ------- |
+| count | int | Maximum releases count expected |
+| page | int | Page offset |
+| offset | int | Row offset (overwrites page param) |
+| q | string | Query |
+
+Query is directly fed to a SphinxSearch engine, allowing [specific syntax](http://sphinxsearch.com/docs/current/extended-syntax.html).
+Note: cat and team are indexed, allowing fast queries like
+[https://predb.ovh/api/v1/?q=@cat EBOOK](https://predb.ovh/api/v1/?q=@cat EBOOK)
+
 
 #### Response
-TODO
+##### Data
+
+| json key | type | content |
+| -------- | ---- | ------- |
+| rowCount | int | Count of rows returned |
+| offset | int | Row count offset requested |
+| reqCount | int | Row count requested |
+| total | int | Total matching rows |
+| time | float | Request internal duration |
+| rows | []release | Array of [releases](#release) |
+
+
+##### Release
+
+| json key | type | content |
+| -------- | ---- | ------- |
+| id | int | Internal unique pre ID |
+| name | string | Release name |
+| team | string | Release group extracted from name |
+| cat | string | Category |
+| genre | string | Genre |
+| url | string | Info link |
+| size | float | Release size in kb |
+| files | int | Original file count |
+| preAt | int | Release pre timestamp |
+| nuke | nuke/null | [Nuke](#nuke) info if available |
+
+
+##### Nuke
+
+| json key | type | content |
+| -------- | ---- | ------- |
+| id | int | Internal unique nuke ID |
+| typeID | int | [Nuke type](#nuke-types) ID |
+| type | string | [Nuke type](#nuke-types) |
+| preID | int | Nuked pre ID |
+| reason | string | Nuke reason |
+| net | string | Nuke source net |
+| nukeAt | int | Nuke timestamp |
+
+
+##### Nuke types
+Known nuke types and type ids
+
+| nuke type ID | nuke type |
+| ------------ | --------- |
+| 1 | nuke |
+| 2 | unnuke |
+| 3 | modnuke |
+| 4 | delpre |
+| 5 | undelpre |
 
 #### Example
 * [https://predb.ovh/api/v1/?q=bdrip](https://predb.ovh/api/v1/?q=bdrip)
@@ -104,12 +174,55 @@ This method is the exact clone of [GET /](#get), without any HTTP cache.
 
 * Cache : None
 * Usage : Get fresh data before listening to websocket updates
+* Rate limit : 2/20s
 
 **To avoid abuse, this method is severly rate limited**
 
 #### Example
 * [https://predb.ovh/api/v1/live](https://predb.ovh/api/v1/live)
 
+```
+{
+    "status": "success",
+    "message": "",
+    "data": {
+        "rowCount": 20,
+        "rows": [
+            {
+                "id": 7814699,
+                "name": "AllOver30.com_17.05.03.Drew.Jones.XXX.iMAGESET-YAPG",
+                "team": "YAPG",
+                "cat": "XXX-iMGSET",
+                "genre": "Mature.Women",
+                "url": "http://HTTP://AllOver30.com",
+                "size": 211.9,
+                "files": 45,
+                "preAt": 1493881734,
+                "nuke": null
+            },
+            {
+                "snip": "Content snipped for lisibility"
+            },
+            {
+                "id": 7814680,
+                "name": "Robert_Abigail_Feat_13_Amps_-_Living_On_The_Right_Side-(AG_010)-WEB-2017-ZzZz",
+                "team": "ZzZz",
+                "cat": "MP3",
+                "genre": "Dance",
+                "url": "http://junodownload.com",
+                "size": 7,
+                "files": 1,
+                "preAt": 1493880783,
+                "nuke": null
+            }
+        ],
+        "offset": 0,
+        "reqCount": 20,
+        "total": 7751247,
+        "time": 0.898239015
+    }
+}
+```
 
 ### GET /stats
 Generate database statistics
@@ -118,15 +231,31 @@ Generate database statistics
 * Usage : Keep track of current database status and response times
 
 #### Parameters
-TODO
+None
 
 #### Response
-TODO
+##### Data
+
+| json key | type | content |
+| -------- | ---- | ------- |
+| total | int | Total indexed releases count |
+| date | string | Current RFC3339 timestamp of server |
+| time | int | Full index scan duration |
 
 #### Example
 * [https://predb.ovh/api/v1/stats](https://predb.ovh/api/v1/stats)
 
-TODO
+```
+{
+    "status": "success",
+    "message": "",
+    "data": {
+        "total": 7751280,
+        "date": "2017-05-04T09:49:42.527504724+02:00",
+        "time": 0.893255737
+    }
+}
+```
 
 
 ### GET /ws
@@ -138,10 +267,47 @@ This method binds to a websocket, sending near realtime updates.
 There is no parameter, and any input on the websocket is discarded
 
 #### Response
-TODO
+There is no response per se, but a range of frames sent over time
+
+##### Frame
+Each frame represents an action towards a specific release.
+
+| json key | type | content |
+| -------- | ---- | ------- |
+| action | string | Action type |
+| row | release | [Release](#release) |
+
+##### Action types
+Known action types
+
+| action | context |
+| ------ | ------- |
+| insert | First release pre |
+| update | Any release field update |
+| delete | Erroneous release (should never happen) |
+| nuke | Release nuked by net |
+| unnuke | Release unnuked by net |
+| modnuke | Nuke reason modified by net |
+| delpre | Pre deleted by net |
+| undelpre | Pre undeleted by net |
 
 #### Example
 * [https://predb.ovh/api/v1/ws](https://predb.ovh/api/v1/ws)
 
-TODO
-
+```
+{
+    "action": "insert",
+    "row": {
+        "id": 7814727,
+        "name": "Doom_Squad-Countdown_To_Doomsday_II-WEB-2016-ESG",
+        "team": "ESG",
+        "cat": "MP3",
+        "genre": "",
+        "url": "",
+        "size": 0,
+        "files": 0,
+        "preAt": 1493884429,
+        "nuke": null
+    }
+}
+```

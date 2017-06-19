@@ -54,6 +54,16 @@
             
                 <li class="toctree-l3"><a href="#predbovh-api-documentation">Predb.ovh API documentation</a></li>
                 
+                    <li><a class="toctree-l4" href="#disclaimers">Disclaimers</a></li>
+                
+                    <li><a class="toctree-l4" href="#status">Status</a></li>
+                
+                    <li><a class="toctree-l4" href="#api-versions">API versions</a></li>
+                
+                    <li><a class="toctree-l4" href="#responses">Responses</a></li>
+                
+                    <li><a class="toctree-l4" href="#endpoints">Endpoints</a></li>
+                
             
             </ul>
         
@@ -93,6 +103,511 @@
             <div class="section">
               
                 <h1 id="predbovh-api-documentation">Predb.ovh API documentation</h1>
+<p>Most pre databases websites do not allow data scapping, nor do they offer an API.</p>
+<p>Having a easily accessible API was a requirement for me, so I built this one using public pre sources.</p>
+<h2 id="disclaimers">Disclaimers</h2>
+<p>Disclaimer : This API has been built for my personal usage, and may not fit your needs. <a href="https://github.com/predbdotovh/pre-api/issues">Github issues</a> can be filled, but don't expect too much.</p>
+<p>Disclaimer 2 : Once again, this API does <strong>NOT</strong> host any content, only metadata associated to scene releases.</p>
+<p>Disclaimer 3 : Don't know what scene releases are ? You're probably at the wrong place.</p>
+<h2 id="status">Status</h2>
+<p>This API is currently usable, and used by <a href="https://predb.ovh/">demo website</a> which is also <a href="https://github.com/predbdotovh/website">open-sourced</a>.
+Please note that this API is not stable yet, and may break at any time.</p>
+<h2 id="api-versions">API versions</h2>
+<p>Current version is <strong>v1</strong></p>
+<p>Current base URL is : <a href="https://predb.ovh/api/v1/">https://predb.ovh/api/v1/</a></p>
+<h2 id="responses">Responses</h2>
+<p>The API will always return HTTP 200 with application/json content.</p>
+<p>On success :</p>
+<pre><code>{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;&quot;,
+    &quot;data&quot;: &quot;... See endpoints responses ...&quot;
+}
+</code></pre>
+
+<p>On failure :</p>
+<pre><code>{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Human readable error message&quot;,
+    &quot;data&quot;: null
+}
+</code></pre>
+
+<h2 id="endpoints">Endpoints</h2>
+<h3 id="get">GET /</h3>
+<p>List releases matching a set of filters given in parameters</p>
+<ul>
+<li>Cache : 60 seconds</li>
+<li>Usage : Get releases info</li>
+<li>Rate limit : 30/60s</li>
+</ul>
+<h4 id="parameters">Parameters</h4>
+<p>All parameters are optional</p>
+<table>
+<thead>
+<tr>
+<th>param key</th>
+<th>type</th>
+<th>content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>count</td>
+<td>int</td>
+<td>Maximum releases count expected</td>
+</tr>
+<tr>
+<td>page</td>
+<td>int</td>
+<td>Page offset</td>
+</tr>
+<tr>
+<td>offset</td>
+<td>int</td>
+<td>Row offset (overwrites page param)</td>
+</tr>
+<tr>
+<td>q</td>
+<td>string</td>
+<td>Query</td>
+</tr>
+</tbody>
+</table>
+<p>Query is directly fed to a SphinxSearch engine, allowing <a href="http://sphinxsearch.com/docs/current/extended-syntax.html">specific syntax</a>.
+Note: cat and team are indexed, allowing fast queries like
+<a href="https://predb.ovh/api/v1/?q=@cat EBOOK">https://predb.ovh/api/v1/?q=@cat EBOOK</a></p>
+<h4 id="response">Response</h4>
+<h5 id="data">Data</h5>
+<table>
+<thead>
+<tr>
+<th>json key</th>
+<th>type</th>
+<th>content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rowCount</td>
+<td>int</td>
+<td>Count of rows returned</td>
+</tr>
+<tr>
+<td>offset</td>
+<td>int</td>
+<td>Row count offset requested</td>
+</tr>
+<tr>
+<td>reqCount</td>
+<td>int</td>
+<td>Row count requested</td>
+</tr>
+<tr>
+<td>total</td>
+<td>int</td>
+<td>Total matching rows</td>
+</tr>
+<tr>
+<td>time</td>
+<td>float</td>
+<td>Request internal duration</td>
+</tr>
+<tr>
+<td>rows</td>
+<td>[]release</td>
+<td>Array of <a href="#release">releases</a></td>
+</tr>
+</tbody>
+</table>
+<h5 id="release">Release</h5>
+<table>
+<thead>
+<tr>
+<th>json key</th>
+<th>type</th>
+<th>content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>Internal unique pre ID</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>Release name</td>
+</tr>
+<tr>
+<td>team</td>
+<td>string</td>
+<td>Release group extracted from name</td>
+</tr>
+<tr>
+<td>cat</td>
+<td>string</td>
+<td>Category</td>
+</tr>
+<tr>
+<td>genre</td>
+<td>string</td>
+<td>Genre</td>
+</tr>
+<tr>
+<td>url</td>
+<td>string</td>
+<td>Info link</td>
+</tr>
+<tr>
+<td>size</td>
+<td>float</td>
+<td>Release size in kb</td>
+</tr>
+<tr>
+<td>files</td>
+<td>int</td>
+<td>Original file count</td>
+</tr>
+<tr>
+<td>preAt</td>
+<td>int</td>
+<td>Release pre timestamp</td>
+</tr>
+<tr>
+<td>nuke</td>
+<td>nuke/null</td>
+<td><a href="#nuke">Nuke</a> info if available</td>
+</tr>
+</tbody>
+</table>
+<h5 id="nuke">Nuke</h5>
+<table>
+<thead>
+<tr>
+<th>json key</th>
+<th>type</th>
+<th>content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>Internal unique nuke ID</td>
+</tr>
+<tr>
+<td>typeID</td>
+<td>int</td>
+<td><a href="#nuke-types">Nuke type</a> ID</td>
+</tr>
+<tr>
+<td>type</td>
+<td>string</td>
+<td><a href="#nuke-types">Nuke type</a></td>
+</tr>
+<tr>
+<td>preID</td>
+<td>int</td>
+<td>Nuked pre ID</td>
+</tr>
+<tr>
+<td>reason</td>
+<td>string</td>
+<td>Nuke reason</td>
+</tr>
+<tr>
+<td>net</td>
+<td>string</td>
+<td>Nuke source net</td>
+</tr>
+<tr>
+<td>nukeAt</td>
+<td>int</td>
+<td>Nuke timestamp</td>
+</tr>
+</tbody>
+</table>
+<h5 id="nuke-types">Nuke types</h5>
+<p>Known nuke types and type ids</p>
+<table>
+<thead>
+<tr>
+<th>nuke type ID</th>
+<th>nuke type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>nuke</td>
+</tr>
+<tr>
+<td>2</td>
+<td>unnuke</td>
+</tr>
+<tr>
+<td>3</td>
+<td>modnuke</td>
+</tr>
+<tr>
+<td>4</td>
+<td>delpre</td>
+</tr>
+<tr>
+<td>5</td>
+<td>undelpre</td>
+</tr>
+</tbody>
+</table>
+<h4 id="example">Example</h4>
+<ul>
+<li><a href="https://predb.ovh/api/v1/?q=bdrip">https://predb.ovh/api/v1/?q=bdrip</a></li>
+</ul>
+<pre><code>{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;&quot;,
+    &quot;data&quot;: {
+        &quot;rowCount&quot;: 20,
+        &quot;rows&quot;: [
+            {
+                &quot;id&quot;: 7813747,
+                &quot;name&quot;: &quot;Fortitude.S02E10.German.DUBBED.BDRip.x264-AIDA&quot;,
+                &quot;team&quot;: &quot;AIDA&quot;,
+                &quot;cat&quot;: &quot;TV-DVDRIP&quot;,
+                &quot;genre&quot;: &quot;&quot;,
+                &quot;url&quot;: &quot;http://imdb.com/title/tt3498622/&quot;,
+                &quot;size&quot;: 0,
+                &quot;files&quot;: 0,
+                &quot;preAt&quot;: 1493815560,
+                &quot;nuke&quot;: null
+            },
+            {
+                &quot;snip&quot;: &quot;Content snipped for lisibility&quot;
+            },
+            {
+                &quot;id&quot;: 7812994,
+                &quot;name&quot;: &quot;Fortitude.S02E07.BDRip.x264-HAGGiS&quot;,
+                &quot;team&quot;: &quot;HAGGiS&quot;,
+                &quot;cat&quot;: &quot;TV-DVDRIP&quot;,
+                &quot;genre&quot;: &quot;&quot;,
+                &quot;url&quot;: &quot;http://imdb.com/title/tt3498622&quot;,
+                &quot;size&quot;: 258,
+                &quot;files&quot;: 19,
+                &quot;preAt&quot;: 1493762423,
+                &quot;nuke&quot;: null
+            }
+        ],
+        &quot;offset&quot;: 0,
+        &quot;reqCount&quot;: 20,
+        &quot;total&quot;: 70729,
+        &quot;time&quot;: 0.108095174
+    }
+}
+</code></pre>
+
+<h3 id="get-live">GET /live</h3>
+<p>This method is the exact clone of <a href="#get">GET /</a>, without any HTTP cache.</p>
+<ul>
+<li>Cache : None</li>
+<li>Usage : Get fresh data before listening to websocket updates</li>
+<li>Rate limit : 2/20s</li>
+</ul>
+<p><strong>To avoid abuse, this method is severly rate limited</strong></p>
+<h4 id="example_1">Example</h4>
+<ul>
+<li><a href="https://predb.ovh/api/v1/live">https://predb.ovh/api/v1/live</a></li>
+</ul>
+<pre><code>{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;&quot;,
+    &quot;data&quot;: {
+        &quot;rowCount&quot;: 20,
+        &quot;rows&quot;: [
+            {
+                &quot;id&quot;: 7814699,
+                &quot;name&quot;: &quot;AllOver30.com_17.05.03.Drew.Jones.XXX.iMAGESET-YAPG&quot;,
+                &quot;team&quot;: &quot;YAPG&quot;,
+                &quot;cat&quot;: &quot;XXX-iMGSET&quot;,
+                &quot;genre&quot;: &quot;Mature.Women&quot;,
+                &quot;url&quot;: &quot;http://HTTP://AllOver30.com&quot;,
+                &quot;size&quot;: 211.9,
+                &quot;files&quot;: 45,
+                &quot;preAt&quot;: 1493881734,
+                &quot;nuke&quot;: null
+            },
+            {
+                &quot;snip&quot;: &quot;Content snipped for lisibility&quot;
+            },
+            {
+                &quot;id&quot;: 7814680,
+                &quot;name&quot;: &quot;Robert_Abigail_Feat_13_Amps_-_Living_On_The_Right_Side-(AG_010)-WEB-2017-ZzZz&quot;,
+                &quot;team&quot;: &quot;ZzZz&quot;,
+                &quot;cat&quot;: &quot;MP3&quot;,
+                &quot;genre&quot;: &quot;Dance&quot;,
+                &quot;url&quot;: &quot;http://junodownload.com&quot;,
+                &quot;size&quot;: 7,
+                &quot;files&quot;: 1,
+                &quot;preAt&quot;: 1493880783,
+                &quot;nuke&quot;: null
+            }
+        ],
+        &quot;offset&quot;: 0,
+        &quot;reqCount&quot;: 20,
+        &quot;total&quot;: 7751247,
+        &quot;time&quot;: 0.898239015
+    }
+}
+</code></pre>
+
+<h3 id="get-stats">GET /stats</h3>
+<p>Generate database statistics</p>
+<ul>
+<li>Cache : 60 seconds</li>
+<li>Usage : Keep track of current database status and response times</li>
+</ul>
+<h4 id="parameters_1">Parameters</h4>
+<p>None</p>
+<h4 id="response_1">Response</h4>
+<h5 id="data_1">Data</h5>
+<table>
+<thead>
+<tr>
+<th>json key</th>
+<th>type</th>
+<th>content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>total</td>
+<td>int</td>
+<td>Total indexed releases count</td>
+</tr>
+<tr>
+<td>date</td>
+<td>string</td>
+<td>Current RFC3339 timestamp of server</td>
+</tr>
+<tr>
+<td>time</td>
+<td>int</td>
+<td>Full index scan duration</td>
+</tr>
+</tbody>
+</table>
+<h4 id="example_2">Example</h4>
+<ul>
+<li><a href="https://predb.ovh/api/v1/stats">https://predb.ovh/api/v1/stats</a></li>
+</ul>
+<pre><code>{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;&quot;,
+    &quot;data&quot;: {
+        &quot;total&quot;: 7751280,
+        &quot;date&quot;: &quot;2017-05-04T09:49:42.527504724+02:00&quot;,
+        &quot;time&quot;: 0.893255737
+    }
+}
+</code></pre>
+
+<h3 id="get-ws">GET /ws</h3>
+<p>This method binds to a websocket, sending near realtime updates.</p>
+<ul>
+<li>Cache : None</li>
+</ul>
+<h4 id="parameters_2">Parameters</h4>
+<p>There is no parameter, and any input on the websocket is discarded</p>
+<h4 id="response_2">Response</h4>
+<p>There is no response per se, but a range of frames sent over time</p>
+<h5 id="frame">Frame</h5>
+<p>Each frame represents an action towards a specific release.</p>
+<table>
+<thead>
+<tr>
+<th>json key</th>
+<th>type</th>
+<th>content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>action</td>
+<td>string</td>
+<td>Action type</td>
+</tr>
+<tr>
+<td>row</td>
+<td>release</td>
+<td><a href="#release">Release</a></td>
+</tr>
+</tbody>
+</table>
+<h5 id="action-types">Action types</h5>
+<p>Known action types</p>
+<table>
+<thead>
+<tr>
+<th>action</th>
+<th>context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>insert</td>
+<td>First release pre</td>
+</tr>
+<tr>
+<td>update</td>
+<td>Any release field update</td>
+</tr>
+<tr>
+<td>delete</td>
+<td>Erroneous release (should never happen)</td>
+</tr>
+<tr>
+<td>nuke</td>
+<td>Release nuked by net</td>
+</tr>
+<tr>
+<td>unnuke</td>
+<td>Release unnuked by net</td>
+</tr>
+<tr>
+<td>modnuke</td>
+<td>Nuke reason modified by net</td>
+</tr>
+<tr>
+<td>delpre</td>
+<td>Pre deleted by net</td>
+</tr>
+<tr>
+<td>undelpre</td>
+<td>Pre undeleted by net</td>
+</tr>
+</tbody>
+</table>
+<h4 id="example_3">Example</h4>
+<ul>
+<li><a href="https://predb.ovh/api/v1/ws">https://predb.ovh/api/v1/ws</a></li>
+</ul>
+<pre><code>{
+    &quot;action&quot;: &quot;insert&quot;,
+    &quot;row&quot;: {
+        &quot;id&quot;: 7814727,
+        &quot;name&quot;: &quot;Doom_Squad-Countdown_To_Doomsday_II-WEB-2016-ESG&quot;,
+        &quot;team&quot;: &quot;ESG&quot;,
+        &quot;cat&quot;: &quot;MP3&quot;,
+        &quot;genre&quot;: &quot;&quot;,
+        &quot;url&quot;: &quot;&quot;,
+        &quot;size&quot;: 0,
+        &quot;files&quot;: 0,
+        &quot;preAt&quot;: 1493884429,
+        &quot;nuke&quot;: null
+    }
+}
+</code></pre>
               
             </div>
           </div>
@@ -130,5 +645,5 @@
 
 <!--
 MkDocs version : 0.16.1
-Build Date UTC : 2017-02-04 00:05:52
+Build Date UTC : 2017-06-19 22:36:59
 -->

@@ -66,13 +66,13 @@ func getPre(db *sql.DB, preID int, withNuke bool) (*sphinxRow, error) {
 	return &r, nil
 }
 
-func searchPres(db *sql.DB, q string, offsetInt, countInt int, withNukes bool) ([]sphinxRow, error) {
+func searchPres(tx *sql.Tx, q string, offsetInt, countInt int, withNukes bool) ([]sphinxRow, error) {
 	sqlQuery := "SELECT id, name, team, cat, genre, url, size, files, pre_at FROM " + sphinxTable +
 		" WHERE MATCH(?) ORDER BY id DESC" +
 		" LIMIT " + strconv.Itoa(offsetInt) + "," + strconv.Itoa(countInt) +
 		" OPTION reverse_scan = 1"
 
-	sqlRows, err := db.Query(sqlQuery, replacer.Replace(q))
+	sqlRows, err := tx.Query(sqlQuery, replacer.Replace(q))
 	if err != nil {
 		return nil, err
 	}
@@ -81,13 +81,13 @@ func searchPres(db *sql.DB, q string, offsetInt, countInt int, withNukes bool) (
 	return scanPresRows(sqlRows, withNukes), nil
 }
 
-func latestPres(db *sql.DB, offsetInt, countInt int, withNukes bool) ([]sphinxRow, error) {
+func latestPres(tx *sql.Tx, offsetInt, countInt int, withNukes bool) ([]sphinxRow, error) {
 	sqlQuery := "SELECT id, name, team, cat, genre, url, size, files, pre_at FROM " + sphinxTable +
 		" ORDER BY id DESC" +
 		" LIMIT " + strconv.Itoa(offsetInt) + "," + strconv.Itoa(countInt) +
 		" OPTION reverse_scan = 1"
 
-	sqlRows, err := db.Query(sqlQuery)
+	sqlRows, err := tx.Query(sqlQuery)
 	if err != nil {
 		return nil, err
 	}

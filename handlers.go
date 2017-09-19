@@ -71,21 +71,32 @@ func handleQuery(w http.ResponseWriter, r *http.Request) (*apiRowData, error) {
 		return nil, err
 	}
 
-	rows := make([]sphinxRow, 0)
-	if q == "" {
-		rows, err = latestPres(sphinx, offset, count, true)
-	} else {
-		rows, err = searchPres(sphinx, q, offset, count, true)
-	}
+	tx, err := sphinx.Begin()
 	if err != nil {
 		return nil, err
 	}
-	meta, err := sphinxMeta(sphinx)
+	defer tx.Commit()
+
+	rows := make([]sphinxRow, 0)
+	if q == "" {
+		rows, err = latestPres(tx, offset, count, true)
+	} else {
+		rows, err = searchPres(tx, q, offset, count, true)
+	}
 	if err != nil {
 		return nil, err
 	}
 
-	total, _ := strconv.Atoi(meta["total_found"])
+	meta, err := sphinxMeta(tx)
+	if err != nil {
+		return nil, err
+	}
+
+	total, err := strconv.Atoi(meta["total_found"])
+	if err != nil {
+		return nil, err
+	}
+
 	data := &apiRowData{
 		RowCount: len(rows),
 		Rows:     rows,
@@ -181,19 +192,29 @@ func nukeTriggerHandlerV1(w http.ResponseWriter, r *http.Request) {
 func statsHandlerV1(w http.ResponseWriter, r *http.Request) {
 	t := time.Now()
 
-	_, err := latestPres(sphinx, 0, 0, false)
+	tx, err := sphinx.Begin()
+	if err != nil {
+		apiErr(w, err.Error())
+		return
+	}
+	defer tx.Commit()
+
+	_, err = latestPres(tx, 0, 0, false)
 	if err != nil {
 		apiErr(w, err.Error())
 		return
 	}
 
-	meta, err := sphinxMeta(sphinx)
+	meta, err := sphinxMeta(tx)
 	if err != nil {
 		apiErr(w, err.Error())
 		return
 	}
 
-	total, _ := strconv.Atoi(meta["total_found"])
+	total, err := strconv.Atoi(meta["total_found"])
+	if err != nil {
+		log.Println(err)
+	}
 
 	w.Header().Set("Cache-Control", "public, max-age=60")
 	data := apiStatsData{

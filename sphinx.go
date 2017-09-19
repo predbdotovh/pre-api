@@ -17,8 +17,8 @@ func newSphinx(dbString string) {
 	}
 }
 
-func sphinxMeta(db *sql.DB) (map[string]string, error) {
-	sqlRows, err := db.Query("SHOW META")
+func sphinxMeta(tx *sql.Tx) (map[string]string, error) {
+	sqlRows, err := tx.Query("SHOW META")
 	if err != nil {
 		return nil, err
 	}

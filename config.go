@@ -9,6 +9,7 @@ import (
 type configuration struct {
 	SphinxDatabase string
 	MysqlDatabase  string
+	Addr           string
 }
 
 func loadConfig() *configuration {

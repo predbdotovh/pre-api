@@ -5,8 +5,6 @@ import (
 	"net/http"
 )
 
-const httpListen = "127.0.0.1:8081"
-
 func main() {
 
 	conf := loadConfig()
@@ -15,5 +13,5 @@ func main() {
 
 	router := newRouter()
 
-	log.Fatal(http.ListenAndServe(httpListen, router))
+	log.Fatal(http.ListenAndServe(conf.Addr, router))
 }

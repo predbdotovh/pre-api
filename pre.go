@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"log"
-	"strconv"
 	"strings"
 )
 
@@ -21,6 +20,9 @@ type sphinxRow struct {
 }
 
 var replacer = strings.NewReplacer("(", "\\(", ")", "\\)")
+
+const preColumns = "id, name, team, cat, genre, url, size, files, pre_at"
+const defaultMaxMatches = 1000
 
 func (p *sphinxRow) proc() {
 	p.Size /= 1000
@@ -48,7 +50,7 @@ func scanPresRows(rows *sql.Rows, appendNukes bool) []sphinxRow {
 }
 
 func getPre(db *sql.DB, preID int, withNuke bool) (*sphinxRow, error) {
-	sqlQuery := "SELECT id, name, team, cat, genre, url, size, files, pre_at FROM " + sphinxTable +
+	sqlQuery := "SELECT " + preColumns + " FROM " + sphinxTable +
 		" WHERE id = ? OPTION reverse_scan = 1"
 
 	var r sphinxRow
@@ -67,10 +69,14 @@ func getPre(db *sql.DB, preID int, withNuke bool) (*sphinxRow, error) {
 }
 
 func searchPres(tx *sql.Tx, q string, offsetInt, countInt int, withNukes bool) ([]sphinxRow, error) {
-	sqlQuery := "SELECT id, name, team, cat, genre, url, size, files, pre_at FROM " + sphinxTable +
+	sqlQuery := "SELECT " + preColumns + " FROM " + sphinxTable +
 		" WHERE MATCH(?) ORDER BY id DESC" +
-		" LIMIT " + strconv.Itoa(offsetInt) + "," + strconv.Itoa(countInt) +
+		" LIMIT " + string(offsetInt) + "," + string(countInt) +
 		" OPTION reverse_scan = 1"
+
+	if offsetInt+countInt > defaultMaxMatches {
+		sqlQuery += ", max_matches = " + string(offsetInt+countInt)
+	}
 
 	sqlRows, err := tx.Query(sqlQuery, replacer.Replace(q))
 	if err != nil {
@@ -82,10 +88,14 @@ func searchPres(tx *sql.Tx, q string, offsetInt, countInt int, withNukes bool) (
 }
 
 func latestPres(tx *sql.Tx, offsetInt, countInt int, withNukes bool) ([]sphinxRow, error) {
-	sqlQuery := "SELECT id, name, team, cat, genre, url, size, files, pre_at FROM " + sphinxTable +
+	sqlQuery := "SELECT " + preColumns + " FROM " + sphinxTable +
 		" ORDER BY id DESC" +
-		" LIMIT " + strconv.Itoa(offsetInt) + "," + strconv.Itoa(countInt) +
+		" LIMIT " + string(offsetInt) + "," + string(countInt) +
 		" OPTION reverse_scan = 1"
+
+	if offsetInt+countInt > defaultMaxMatches {
+		sqlQuery += ", max_matches = " + string(offsetInt+countInt)
+	}
 
 	sqlRows, err := tx.Query(sqlQuery)
 	if err != nil {

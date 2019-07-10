@@ -2,20 +2,9 @@ package main
 
 import (
 	"database/sql"
-	"log"
 )
 
 const sphinxTable = "pre_plain, pre_rt"
-
-var sphinx *sql.DB
-
-func newSphinx(dbString string) {
-	var err error
-	sphinx, err = sql.Open("mysql", dbString)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
 
 func sphinxMeta(tx *sql.Tx) (map[string]string, error) {
 	sqlRows, err := tx.Query("SHOW META")

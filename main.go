@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 	"os"
@@ -8,13 +9,16 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
+var sphinx *sql.DB
+var mysql *sql.DB
+
 func main() {
 	sphinxDatabase := getEnv("SPHINX_DATABASE", "tcp(127.0.0.1:9306)/?interpolateParams=true")
 	nukesDatabase := getEnv("NUKES_DATABASE", "")
 	listenAddr := getEnv("LISTEN_ADDRESS", "127.0.0.1:8088")
 
-	newSphinx(sphinxDatabase)
-	newMysql(nukesDatabase)
+	sphinx = newMysql(sphinxDatabase)
+	mysql = newMysql(nukesDatabase)
 
 	router := newRouter()
 

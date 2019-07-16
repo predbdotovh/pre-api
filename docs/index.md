@@ -14,7 +14,7 @@ Disclaimer 3 : Don't know what scene releases are ? You're probably at the wrong
 
 ## Status
 
-This API is currently usable, and used by [demo website](https://predb.ovh/) which is also [open-sourced](https://github.com/predbdotovh/website).
+This API is currently usable, and used by [demo website](https://predb.ovh/) which is also [open-sourced](https://github.com/predbdotovh/website-vuejs).
 Please note that this API is not stable yet, and may break at any time.
 
 ## API versions

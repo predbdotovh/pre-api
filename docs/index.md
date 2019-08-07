@@ -6,7 +6,8 @@ Having a easily accessible API was a requirement for me, so I built this one usi
 
 ## Disclaimers
 
-Disclaimer : This API has been built for my personal usage, and may not fit your needs. [Github issues](https://github.com/predbdotovh/pre-api/issues) can be filled, but don't expect too much.
+Disclaimer : This API has been built for my personal usage, and may not fit your needs.
+[Github issues](https://github.com/predbdotovh/pre-api/issues) can be filled, but don't expect too much.
 
 Disclaimer 2 : Once again, this API does **NOT** host any content, only metadata associated to scene releases.
 
@@ -15,7 +16,6 @@ Disclaimer 3 : Don't know what scene releases are ? You're probably at the wrong
 ## Status
 
 This API is currently usable, and used by [demo website](https://predb.ovh/) which is also [open-sourced](https://github.com/predbdotovh/website-vuejs).
-Please note that this API is not stable yet, and may break at any time.
 
 ## API versions
 
@@ -28,6 +28,7 @@ Current base URL is : [https://predb.ovh/api/v1/](https://predb.ovh/api/v1/)
 The API will always return HTTP 200 with application/json content.
 
 On success :
+
 ```
 {
     "status": "success",
@@ -37,6 +38,7 @@ On success :
 ```
 
 On failure :
+
 ```
 {
     "status": "error",
@@ -48,82 +50,83 @@ On failure :
 ## Endpoints
 
 ### GET /
+
 List releases matching a set of filters given in parameters
 
-* Cache : 60 seconds
-* Usage : Get releases info
-* Rate limit : 30/60s
+- Cache : 60 seconds
+- Usage : Get releases info
+- Rate limit : 30/60s
 
 #### Parameters
+
 All parameters are optional
 
-| param key | type | content |
-| --------- | ---- | ------- |
-| count | int | Maximum releases count expected |
-| page | int | Page offset |
-| offset | int | Row offset (overwrites page param) |
-| q | string | Query |
+| param key | type   | content                            |
+| --------- | ------ | ---------------------------------- |
+| count     | int    | Maximum releases count expected    |
+| page      | int    | Page offset                        |
+| offset    | int    | Row offset (overwrites page param) |
+| q         | string | Query                              |
 
 Query is directly fed to a SphinxSearch engine, allowing [specific syntax](http://sphinxsearch.com/docs/current/extended-syntax.html).
 Note: cat and team are indexed, allowing fast queries like
-[https://predb.ovh/api/v1/?q=@cat EBOOK](https://predb.ovh/api/v1/?q=@cat EBOOK)
-
+[https://predb.ovh/api/v1/?q=@cat%20EBOOK](https://predb.ovh/api/v1/?q=@cat%20EBOOK)
 
 #### Response
+
 ##### Data
 
-| json key | type | content |
-| -------- | ---- | ------- |
-| rowCount | int | Count of rows returned |
-| offset | int | Row count offset requested |
-| reqCount | int | Row count requested |
-| total | int | Total matching rows |
-| time | float | Request internal duration |
-| rows | []release | Array of [releases](#release) |
-
+| json key | type      | content                       |
+| -------- | --------- | ----------------------------- |
+| rowCount | int       | Count of rows returned        |
+| offset   | int       | Row count offset requested    |
+| reqCount | int       | Row count requested           |
+| total    | int       | Total matching rows           |
+| time     | float     | Request internal duration     |
+| rows     | []release | Array of [releases](#release) |
 
 ##### Release
 
-| json key | type | content |
-| -------- | ---- | ------- |
-| id | int | Internal unique pre ID |
-| name | string | Release name |
-| team | string | Release group extracted from name |
-| cat | string | Category |
-| genre | string | Genre |
-| url | string | Info link |
-| size | float | Release size in kb |
-| files | int | Original file count |
-| preAt | int | Release pre timestamp |
-| nuke | nuke/null | [Nuke](#nuke) info if available |
-
+| json key | type      | content                           |
+| -------- | --------- | --------------------------------- |
+| id       | int       | Internal unique pre ID            |
+| name     | string    | Release name                      |
+| team     | string    | Release group extracted from name |
+| cat      | string    | Category                          |
+| genre    | string    | Genre                             |
+| url      | string    | Info link                         |
+| size     | float     | Release size in kb                |
+| files    | int       | Original file count               |
+| preAt    | int       | Release pre timestamp             |
+| nuke     | nuke/null | [Nuke](#nuke) info if available   |
 
 ##### Nuke
 
-| json key | type | content |
-| -------- | ---- | ------- |
-| id | int | Internal unique nuke ID |
-| typeID | int | [Nuke type](#nuke-types) ID |
-| type | string | [Nuke type](#nuke-types) |
-| preID | int | Nuked pre ID |
-| reason | string | Nuke reason |
-| net | string | Nuke source net |
-| nukeAt | int | Nuke timestamp |
-
+| json key | type   | content                     |
+| -------- | ------ | --------------------------- |
+| id       | int    | Internal unique nuke ID     |
+| typeID   | int    | [Nuke type](#nuke-types) ID |
+| type     | string | [Nuke type](#nuke-types)    |
+| preID    | int    | Nuked pre ID                |
+| reason   | string | Nuke reason                 |
+| net      | string | Nuke source net             |
+| nukeAt   | int    | Nuke timestamp              |
 
 ##### Nuke types
+
 Known nuke types and type ids
 
 | nuke type ID | nuke type |
 | ------------ | --------- |
-| 1 | nuke |
-| 2 | unnuke |
-| 3 | modnuke |
-| 4 | delpre |
-| 5 | undelpre |
+| 1            | nuke      |
+| 2            | unnuke    |
+| 3            | modnuke   |
+| 4            | delpre    |
+| 5            | undelpre  |
 
 #### Example
-* [https://predb.ovh/api/v1/?q=bdrip](https://predb.ovh/api/v1/?q=bdrip)
+
+- [https://predb.ovh/api/v1/?q=bdrip](https://predb.ovh/api/v1/?q=bdrip)
 
 ```
 {
@@ -168,18 +171,19 @@ Known nuke types and type ids
 }
 ```
 
-
 ### GET /live
+
 This method is the exact clone of [GET /](#get), without any HTTP cache.
 
-* Cache : None
-* Usage : Get fresh data before listening to websocket updates
-* Rate limit : 2/20s
+- Cache : None
+- Usage : Get fresh data before listening to websocket updates
+- Rate limit : 2/20s
 
 **To avoid abuse, this method is severly rate limited**
 
 #### Example
-* [https://predb.ovh/api/v1/live](https://predb.ovh/api/v1/live)
+
+- [https://predb.ovh/api/v1/live](https://predb.ovh/api/v1/live)
 
 ```
 {
@@ -225,25 +229,30 @@ This method is the exact clone of [GET /](#get), without any HTTP cache.
 ```
 
 ### GET /stats
+
+Basic stats about internal database health
 Generate database statistics
 
-* Cache : 60 seconds
-* Usage : Keep track of current database status and response times
+- Cache : 60 seconds
+- Usage : Keep track of current database status and response times
 
 #### Parameters
+
 None
 
 #### Response
+
 ##### Data
 
-| json key | type | content |
-| -------- | ---- | ------- |
-| total | int | Total indexed releases count |
-| date | string | Current RFC3339 timestamp of server |
-| time | int | Full index scan duration |
+| json key | type   | content                             |
+| -------- | ------ | ----------------------------------- |
+| total    | int    | Total indexed releases count        |
+| date     | string | Current RFC3339 timestamp of server |
+| time     | int    | Full index scan duration            |
 
 #### Example
-* [https://predb.ovh/api/v1/stats](https://predb.ovh/api/v1/stats)
+
+- [https://predb.ovh/api/v1/stats](https://predb.ovh/api/v1/stats)
 
 ```
 {
@@ -257,42 +266,49 @@ None
 }
 ```
 
-
 ### GET /ws
-This method binds to a websocket, sending near realtime updates.
 
-* Cache : None
+A websocket endpoint, sending near realtime updates.
+To use this, you need to bind using a [Websocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications).
+
+- Cache : None
+- Usage : Realtime updates
 
 #### Parameters
+
 There is no parameter, and any input on the websocket is discarded
 
 #### Response
+
 There is no response per se, but a range of frames sent over time
 
 ##### Frame
+
 Each frame represents an action towards a specific release.
 
-| json key | type | content |
-| -------- | ---- | ------- |
-| action | string | Action type |
-| row | release | [Release](#release) |
+| json key | type    | content             |
+| -------- | ------- | ------------------- |
+| action   | string  | Action type         |
+| row      | release | [Release](#release) |
 
 ##### Action types
+
 Known action types
 
-| action | context |
-| ------ | ------- |
-| insert | First release pre |
-| update | Any release field update |
-| delete | Erroneous release (should never happen) |
-| nuke | Release nuked by net |
-| unnuke | Release unnuked by net |
-| modnuke | Nuke reason modified by net |
-| delpre | Pre deleted by net |
-| undelpre | Pre undeleted by net |
+| action   | context                                 |
+| -------- | --------------------------------------- |
+| insert   | First release pre                       |
+| update   | Any release field update                |
+| delete   | Erroneous release (should never happen) |
+| nuke     | Release nuked by net                    |
+| unnuke   | Release unnuked by net                  |
+| modnuke  | Nuke reason modified by net             |
+| delpre   | Pre deleted by net                      |
+| undelpre | Pre undeleted by net                    |
 
 #### Example
-* [https://predb.ovh/api/v1/ws](https://predb.ovh/api/v1/ws)
+
+- [https://predb.ovh/api/v1/ws](https://predb.ovh/api/v1/ws)
 
 ```
 {

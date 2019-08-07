@@ -1,4 +1,4 @@
 site_name: Predb.ovh API
 theme: readthedocs
-pages:
-    - Home: index.md
+nav:
+  - Home: index.md

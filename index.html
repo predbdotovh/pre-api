@@ -7,24 +7,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="None">
   
-  <link rel="shortcut icon" href="./img/favicon.ico">
+  <link rel="shortcut icon" href="img/favicon.ico">
   <title>Home - Predb.ovh API</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
-  <link rel="stylesheet" href="./css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="./css/highlight.css">
+  <link rel="stylesheet" href="css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   
   <script>
     // Current page data
     var mkdocs_page_name = "Home";
     var mkdocs_page_input_path = "index.md";
-    var mkdocs_page_url = "/";
+    var mkdocs_page_url = null;
   </script>
   
-  <script src="./js/jquery-2.1.1.min.js"></script>
-  <script src="./js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="./js/highlight.pack.js"></script> 
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
 
@@ -38,37 +39,39 @@
         <a href="." class="icon icon-home"> Predb.ovh API</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
 	<ul class="current">
+	  
           
-            <li>
-    <li class="toctree-l1 current">
-        <a class="current" href=".">Home</a>
-        
-            <ul>
+            <li class="toctree-l1 current">
+		
+    <a class="current" href=".">Home</a>
+    <ul class="subnav">
             
-                <li class="toctree-l3"><a href="#predbovh-api-documentation">Predb.ovh API documentation</a></li>
-                
-                    <li><a class="toctree-l4" href="#disclaimers">Disclaimers</a></li>
-                
-                    <li><a class="toctree-l4" href="#status">Status</a></li>
-                
-                    <li><a class="toctree-l4" href="#api-versions">API versions</a></li>
-                
-                    <li><a class="toctree-l4" href="#responses">Responses</a></li>
-                
-                    <li><a class="toctree-l4" href="#endpoints">Endpoints</a></li>
-                
-            
-            </ul>
+    <li class="toctree-l2"><a href="#predbovh-api-documentation">Predb.ovh API documentation</a></li>
+    
+        <ul>
         
-    </li>
-<li>
+            <li><a class="toctree-l3" href="#disclaimers">Disclaimers</a></li>
+        
+            <li><a class="toctree-l3" href="#status">Status</a></li>
+        
+            <li><a class="toctree-l3" href="#api-versions">API versions</a></li>
+        
+            <li><a class="toctree-l3" href="#responses">Responses</a></li>
+        
+            <li><a class="toctree-l3" href="#endpoints">Endpoints</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
           
         </ul>
       </div>
@@ -106,12 +109,12 @@
 <p>Most pre databases websites do not allow data scapping, nor do they offer an API.</p>
 <p>Having a easily accessible API was a requirement for me, so I built this one using public pre sources.</p>
 <h2 id="disclaimers">Disclaimers</h2>
-<p>Disclaimer : This API has been built for my personal usage, and may not fit your needs. <a href="https://github.com/predbdotovh/pre-api/issues">Github issues</a> can be filled, but don't expect too much.</p>
+<p>Disclaimer : This API has been built for my personal usage, and may not fit your needs.
+<a href="https://github.com/predbdotovh/pre-api/issues">Github issues</a> can be filled, but don't expect too much.</p>
 <p>Disclaimer 2 : Once again, this API does <strong>NOT</strong> host any content, only metadata associated to scene releases.</p>
 <p>Disclaimer 3 : Don't know what scene releases are ? You're probably at the wrong place.</p>
 <h2 id="status">Status</h2>
-<p>This API is currently usable, and used by <a href="https://predb.ovh/">demo website</a> which is also <a href="https://github.com/predbdotovh/website">open-sourced</a>.
-Please note that this API is not stable yet, and may break at any time.</p>
+<p>This API is currently usable, and used by <a href="https://predb.ovh/">demo website</a> which is also <a href="https://github.com/predbdotovh/website-vuejs">open-sourced</a>.</p>
 <h2 id="api-versions">API versions</h2>
 <p>Current version is <strong>v1</strong></p>
 <p>Current base URL is : <a href="https://predb.ovh/api/v1/">https://predb.ovh/api/v1/</a></p>
@@ -176,7 +179,7 @@ Please note that this API is not stable yet, and may break at any time.</p>
 </table>
 <p>Query is directly fed to a SphinxSearch engine, allowing <a href="http://sphinxsearch.com/docs/current/extended-syntax.html">specific syntax</a>.
 Note: cat and team are indexed, allowing fast queries like
-<a href="https://predb.ovh/api/v1/?q=@cat EBOOK">https://predb.ovh/api/v1/?q=@cat EBOOK</a></p>
+<a href="https://predb.ovh/api/v1/?q=@cat%20EBOOK">https://predb.ovh/api/v1/?q=@cat%20EBOOK</a></p>
 <h4 id="response">Response</h4>
 <h5 id="data">Data</h5>
 <table>
@@ -462,7 +465,8 @@ Note: cat and team are indexed, allowing fast queries like
 </code></pre>
 
 <h3 id="get-stats">GET /stats</h3>
-<p>Generate database statistics</p>
+<p>Basic stats about internal database health
+Generate database statistics</p>
 <ul>
 <li>Cache : 60 seconds</li>
 <li>Usage : Keep track of current database status and response times</li>
@@ -513,9 +517,11 @@ Note: cat and team are indexed, allowing fast queries like
 </code></pre>
 
 <h3 id="get-ws">GET /ws</h3>
-<p>This method binds to a websocket, sending near realtime updates.</p>
+<p>A websocket endpoint, sending near realtime updates.
+To use this, you need to bind using a <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications">Websocket</a>.</p>
 <ul>
 <li>Cache : None</li>
+<li>Usage : Realtime updates</li>
 </ul>
 <h4 id="parameters_2">Parameters</h4>
 <p>There is no parameter, and any input on the websocket is discarded</p>
@@ -623,12 +629,12 @@ Note: cat and team are indexed, allowing fast queries like
 
   Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
-	  
+      
         </div>
       </div>
 
     </section>
-    
+
   </div>
 
   <div class="rst-versions" role="note" style="cursor: pointer">
@@ -638,12 +644,14 @@ Note: cat and team are indexed, allowing fast queries like
       
     </span>
 </div>
-    <script src="./js/theme.js"></script>
+    <script>var base_url = '.';</script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
 
 </body>
 </html>
 
 <!--
-MkDocs version : 0.16.1
-Build Date UTC : 2017-06-19 22:36:59
+MkDocs version : 1.0.4
+Build Date UTC : 2019-08-07 22:40:30
 -->

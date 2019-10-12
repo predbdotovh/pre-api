@@ -105,9 +105,9 @@ Note: cat and team are indexed, allowing fast queries like
 | json key | type   | content                     |
 | -------- | ------ | --------------------------- |
 | id       | int    | Internal unique nuke ID     |
-| typeID   | int    | [Nuke type](#nuke-types) ID |
+| typeId   | int    | [Nuke type](#nuke-types) ID |
 | type     | string | [Nuke type](#nuke-types)    |
-| preID    | int    | Nuked pre ID                |
+| preId    | int    | Nuked pre ID                |
 | reason   | string | Nuke reason                 |
 | net      | string | Nuke source net             |
 | nukeAt   | int    | Nuke timestamp              |

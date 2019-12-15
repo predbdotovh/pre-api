@@ -68,6 +68,25 @@ func getPre(db *sql.DB, preID int, withNuke bool) (*sphinxRow, error) {
 	return &r, nil
 }
 
+func getPresById(tx *sql.Tx, preID int, withNuke bool) ([]sphinxRow, error) {
+	sqlQuery := "SELECT " + preColumns + " FROM " + sphinxTable +
+		" WHERE id = ? OPTION reverse_scan = 1"
+
+	var r sphinxRow
+
+	err := tx.QueryRow(sqlQuery, preID).Scan(&r.ID, &r.Name, &r.Team, &r.Cat, &r.Genre, &r.URL, &r.Size, &r.Files, &r.PreAt)
+	if err != nil {
+		return nil, err
+	}
+
+	r.proc()
+	if withNuke {
+		r.fetchNuke(mysql)
+	}
+
+	return []sphinxRow{r}, nil
+}
+
 func searchPres(tx *sql.Tx, q string, offsetInt, countInt int, withNukes bool) ([]sphinxRow, error) {
 	sqlQuery := "SELECT " + preColumns + " FROM " + sphinxTable +
 		" WHERE MATCH(?) ORDER BY id DESC" +

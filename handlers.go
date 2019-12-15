@@ -64,6 +64,7 @@ func handleQuery(w http.ResponseWriter, r *http.Request) (*apiRowData, error) {
 	t := time.Now()
 
 	query := r.URL.Query()
+	idStr := query.Get("id")
 	q := query.Get("q")
 
 	offset, count, err := pagination(query)
@@ -78,7 +79,13 @@ func handleQuery(w http.ResponseWriter, r *http.Request) (*apiRowData, error) {
 	defer tx.Commit()
 
 	rows := make([]sphinxRow, 0)
-	if q == "" {
+	if idStr != "" {
+		id, err := strconv.Atoi(idStr)
+		if err != nil {
+			return nil, err
+		}
+		rows, err = getPresById(tx, id, true)
+	} else if q == "" {
 		rows, err = latestPres(tx, offset, count, true)
 	} else {
 		rows, err = searchPres(tx, q, offset, count, true)

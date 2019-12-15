@@ -61,12 +61,13 @@ List releases matching a set of filters given in parameters
 
 All parameters are optional
 
-| param key | type   | content                            |
-| --------- | ------ | ---------------------------------- |
-| count     | int    | Maximum releases count expected    |
-| page      | int    | Page offset                        |
-| offset    | int    | Row offset (overwrites page param) |
-| q         | string | Query                              |
+| param key | type   | content                              |
+| --------- | ------ | ------------------------------------ |
+| count     | int    | Maximum releases count expected      |
+| page      | int    | Page offset                          |
+| offset    | int    | Row offset (overwrites page param)   |
+| q         | string | Query                                |
+| id        | int    | Specific pre ID (overwrites q param) |
 
 Query is directly fed to a SphinxSearch engine, allowing [specific syntax](http://sphinxsearch.com/docs/current/extended-syntax.html).
 Note: cat and team are indexed, allowing fast queries like

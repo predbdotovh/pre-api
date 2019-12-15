@@ -13,14 +13,16 @@ func newRouter() *mux.Router {
 	backendUpdates = make(chan triggerAction)
 	go backendPump()
 
-	router := mux.NewRouter().
+	router := mux.NewRouter()
+
+	publicRouter := router.
 		StrictSlash(true).
 		Host(hostname).
 		PathPrefix("/api").
 		Subrouter()
 
 	for ver, jRoutes := range jsonRoutes {
-		versionRouter := router.PathPrefix("/" + ver).Subrouter()
+		versionRouter := publicRouter.PathPrefix("/" + ver).Subrouter()
 		for _, r := range jRoutes {
 			versionRouter.
 				Methods(r.Method).
@@ -28,6 +30,20 @@ func newRouter() *mux.Router {
 				Name(r.Name).
 				Handler(logger(r.Handler, r.Name))
 		}
+	}
+
+	privateRouter := router.
+		StrictSlash(true).
+		Host("localhost").
+		PathPrefix("/trigger").
+		Subrouter()
+
+	for _, r := range triggerRoutes {
+		privateRouter.
+			Methods(r.Method).
+			Path(r.Pattern).
+			Name(r.Name).
+			Handler(logger(r.Handler, r.Name))
 	}
 
 	router.NotFoundHandler = http.HandlerFunc(notFound)

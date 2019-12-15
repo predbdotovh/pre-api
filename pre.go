@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"strings"
 )
@@ -50,8 +51,7 @@ func scanPresRows(rows *sql.Rows, appendNukes bool) []sphinxRow {
 }
 
 func getPre(db *sql.DB, preID int, withNuke bool) (*sphinxRow, error) {
-	sqlQuery := "SELECT " + preColumns + " FROM " + sphinxTable +
-		" WHERE id = ? OPTION reverse_scan = 1"
+	sqlQuery := fmt.Sprintf("SELECT %s FROM %s WHERE id = ? OPTION reverse_scan = 1", preColumns, sphinxTable)
 
 	var r sphinxRow
 
@@ -69,8 +69,7 @@ func getPre(db *sql.DB, preID int, withNuke bool) (*sphinxRow, error) {
 }
 
 func getPresById(tx *sql.Tx, preID int, withNuke bool) ([]sphinxRow, error) {
-	sqlQuery := "SELECT " + preColumns + " FROM " + sphinxTable +
-		" WHERE id = ? OPTION reverse_scan = 1"
+	sqlQuery := fmt.Sprintf("SELECT %s FROM %s WHERE id = ? OPTION reverse_scan = 1", preColumns, sphinxTable)
 
 	var r sphinxRow
 
@@ -88,10 +87,7 @@ func getPresById(tx *sql.Tx, preID int, withNuke bool) ([]sphinxRow, error) {
 }
 
 func searchPres(tx *sql.Tx, q string, offsetInt, countInt int, withNukes bool) ([]sphinxRow, error) {
-	sqlQuery := "SELECT " + preColumns + " FROM " + sphinxTable +
-		" WHERE MATCH(?) ORDER BY id DESC" +
-		" LIMIT " + string(offsetInt) + "," + string(countInt) +
-		" OPTION reverse_scan = 1"
+	sqlQuery := fmt.Sprintf("SELECT %s FROM %s WHERE MATCH(?) ORDER BY id DESC LIMIT %d,%d OPTION reverse_scan = 1", preColumns, sphinxTable, offsetInt, countInt)
 
 	if offsetInt+countInt > defaultMaxMatches {
 		sqlQuery += ", max_matches = " + string(offsetInt+countInt)
@@ -107,10 +103,7 @@ func searchPres(tx *sql.Tx, q string, offsetInt, countInt int, withNukes bool) (
 }
 
 func latestPres(tx *sql.Tx, offsetInt, countInt int, withNukes bool) ([]sphinxRow, error) {
-	sqlQuery := "SELECT " + preColumns + " FROM " + sphinxTable +
-		" ORDER BY id DESC" +
-		" LIMIT " + string(offsetInt) + "," + string(countInt) +
-		" OPTION reverse_scan = 1"
+	sqlQuery := fmt.Sprintf("SELECT %s FROM %s ORDER BY id DESC LIMIT %d,%d OPTION reverse_scan = 1", preColumns, sphinxTable, offsetInt, countInt)
 
 	if offsetInt+countInt > defaultMaxMatches {
 		sqlQuery += ", max_matches = " + string(offsetInt+countInt)

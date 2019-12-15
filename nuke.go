@@ -1,6 +1,9 @@
 package main
 
-import "database/sql"
+import (
+	"database/sql"
+	"fmt"
+)
 
 const nukeTable = "nuke"
 
@@ -30,8 +33,7 @@ func (n *nuke) setType() {
 }
 
 func getNuke(db *sql.DB, preID int) (*nuke, error) {
-	sqlQuery := "SELECT id, pre_id, nuke_id, reason, net, source, UNIX_TIMESTAMP(set_at) FROM " + nukeTable +
-		" WHERE pre_id = ? ORDER BY id DESC LIMIT 1"
+	sqlQuery := fmt.Sprintf("SELECT id, pre_id, nuke_id, reason, net, source, UNIX_TIMESTAMP(set_at) FROM %s WHERE pre_id = ? ORDER BY id DESC LIMIT 1", nukeTable)
 
 	var r nuke
 

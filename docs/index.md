@@ -229,6 +229,19 @@ This method is the exact clone of [GET /](#get), without any HTTP cache.
 }
 ```
 
+### GET /rss
+
+This method is the exact clone of [GET /](#get), formatted using RSS2.0 spec.
+
+- Cache : 60 seconds
+- Usage : Get releases info using a RSS reader
+- Rate limit : 30/60s
+
+
+#### Example
+
+- [https://predb.ovh/api/v1/rss](https://predb.ovh/api/v1/rss)
+
 ### GET /stats
 
 Basic stats about internal database health

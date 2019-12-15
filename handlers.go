@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
 )
 
@@ -233,4 +234,35 @@ func statsHandlerV1(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
+}
+
+func rssHandlerV1(w http.ResponseWriter, r *http.Request) {
+	data, err := handleQuery(w, r)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	feed := &feeds.Feed{
+		Title:   "PreDB",
+		Link:    &feeds.Link{Href: "https://predb.ovh/"},
+		Created: time.Now(),
+	}
+
+	for _, row := range data.Rows {
+		feed.Items = append(feed.Items, &feeds.Item{
+			Title:       row.Name,
+			Link:        &feeds.Link{Href: fmt.Sprintf("https://predb.ovh/?id=%d", row.ID)},
+			Description: fmt.Sprintf("Cat:%s | Genre:%s | Size:%f | Files:%d | ID:%d", row.Cat, row.Genre, row.Size, row.Files, row.ID),
+			Created:     time.Unix(int64(row.PreAt), 0),
+		})
+	}
+
+	rss, err := feed.ToRss()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Write([]byte(rss))
 }

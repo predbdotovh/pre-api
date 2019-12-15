@@ -19,6 +19,7 @@ var jsonRoutes = jsonMuxRoutes{
 		muxRoute{"Root", "GET", "/", rootHandlerV1},
 		muxRoute{"Stats", "GET", "/stats", statsHandlerV1},
 		muxRoute{"Live", "GET", "/live", liveHandlerV1},
+		muxRoute{"Rss", "GET", "/rss", rssHandlerV1},
 		muxRoute{"WS", "GET", "/ws", websocketHandlerV1},
 		muxRoute{"PreTrigger", "POST", "/trigger/{action}", preTriggerHandlerV1},
 		muxRoute{"NukeTrigger", "POST", "/nuketrigger", nukeTriggerHandlerV1},

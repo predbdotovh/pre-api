@@ -17,9 +17,12 @@ Disclaimer 3 : Don't know what scene releases are ? You're probably at the wrong
 
 This API is currently usable, and used by [demo website](https://predb.ovh/) which is also [open-sourced](https://github.com/predbdotovh/website-vuejs).
 
+As the API is fed by Sphinx, results are hard limited at 1000, and I don't expect to modify this behaviour in the future.
+There will be an automatic weekly-ish export of the entire database at some point.
+
 ## API versions
 
-Current version is **v1**
+Current version is **v1**. This version is expected to be updated on each breaking change.
 
 Current base URL is : [https://predb.ovh/api/v1/](https://predb.ovh/api/v1/)
 

@@ -115,11 +115,13 @@
 <p>Disclaimer 3 : Don't know what scene releases are ? You're probably at the wrong place.</p>
 <h2 id="status">Status</h2>
 <p>This API is currently usable, and used by <a href="https://predb.ovh/">demo website</a> which is also <a href="https://github.com/predbdotovh/website-vuejs">open-sourced</a>.</p>
+<p>As the API is fed by Sphinx, results are hard limited at 1000, and I don't expect to modify this behaviour in the future.
+There will be an automatic weekly-ish export of the entire database at some point.</p>
 <h2 id="api-versions">API versions</h2>
-<p>Current version is <strong>v1</strong></p>
+<p>Current version is <strong>v1</strong>. This version is expected to be updated on each breaking change.</p>
 <p>Current base URL is : <a href="https://predb.ovh/api/v1/">https://predb.ovh/api/v1/</a></p>
 <h2 id="responses">Responses</h2>
-<p>The API will always return HTTP 200 with application/json content.</p>
+<p>The API will always return HTTP 200 with application/json content (except for <a href="#get-rss">RSS</a>).</p>
 <p>On success :</p>
 <pre><code>{
     &quot;status&quot;: &quot;success&quot;,
@@ -174,6 +176,11 @@
 <td>q</td>
 <td>string</td>
 <td>Query</td>
+</tr>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>Specific pre ID (overwrites q param)</td>
 </tr>
 </tbody>
 </table>
@@ -464,6 +471,40 @@ Note: cat and team are indexed, allowing fast queries like
 }
 </code></pre>
 
+<h3 id="get-rss">GET /rss</h3>
+<p>This method is the exact clone of <a href="#get">GET /</a>, formatted using RSS2.0 spec.</p>
+<ul>
+<li>Cache : 60 seconds</li>
+<li>Usage : Get releases info using a RSS reader</li>
+<li>Rate limit : 30/60s</li>
+</ul>
+<h4 id="example_2">Example</h4>
+<ul>
+<li><a href="https://predb.ovh/api/v1/rss">https://predb.ovh/api/v1/rss</a></li>
+</ul>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;rss version=&quot;2.0&quot; xmlns:content=&quot;http://purl.org/rss/1.0/modules/content/&quot;&gt;
+    &lt;channel&gt;
+        &lt;title&gt;PreDB&lt;/title&gt;
+        &lt;link&gt;https://predb.ovh/&lt;/link&gt;
+        &lt;description&gt;&lt;/description&gt;
+        &lt;pubDate&gt;Sun, 15 Dec 2019 21:23:59 +0100&lt;/pubDate&gt;
+        &lt;item&gt;
+            &lt;title&gt;Le.Steppe.Dell.Asia.La.Piu.Grande.Steppa.Della.Terra.iTALiAN.HDTV.x264-iDiB&lt;/title&gt;
+            &lt;link&gt;https://predb.ovh/?id=9643108&lt;/link&gt;
+            &lt;description&gt;Cat:TV-SD-X264 | Genre: | Size:0MB | Files:0 | ID:9643108&lt;/description&gt;
+            &lt;pubDate&gt;Sun, 15 Dec 2019 21:23:49 +0100&lt;/pubDate&gt;
+        &lt;/item&gt;
+        &lt;item&gt;
+            &lt;title&gt;Le.Steppe.Dell.Asia.La.Piu.Grande.Steppa.Della.Terra.iTALiAN.720p.HDTV.x264-iDiB&lt;/title&gt;
+            &lt;link&gt;https://predb.ovh/?id=9643107&lt;/link&gt;
+            &lt;description&gt;Cat:TV-HD-X264 | Genre: | Size:0MB | Files:0 | ID:9643107&lt;/description&gt;
+            &lt;pubDate&gt;Sun, 15 Dec 2019 21:23:48 +0100&lt;/pubDate&gt;
+        &lt;/item&gt;
+    &lt;/channel&gt;
+&lt;/rss&gt;
+</code></pre>
+
 <h3 id="get-stats">GET /stats</h3>
 <p>Basic stats about internal database health
 Generate database statistics</p>
@@ -501,7 +542,7 @@ Generate database statistics</p>
 </tr>
 </tbody>
 </table>
-<h4 id="example_2">Example</h4>
+<h4 id="example_3">Example</h4>
 <ul>
 <li><a href="https://predb.ovh/api/v1/stats">https://predb.ovh/api/v1/stats</a></li>
 </ul>
@@ -594,7 +635,7 @@ To use this, you need to bind using a <a href="https://developer.mozilla.org/en-
 </tr>
 </tbody>
 </table>
-<h4 id="example_3">Example</h4>
+<h4 id="example_4">Example</h4>
 <ul>
 <li><a href="https://predb.ovh/api/v1/ws">https://predb.ovh/api/v1/ws</a></li>
 </ul>
@@ -653,5 +694,5 @@ To use this, you need to bind using a <a href="https://developer.mozilla.org/en-
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2019-12-15 18:54:51
+Build Date UTC : 2019-12-15 20:46:20
 -->

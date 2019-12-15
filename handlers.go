@@ -61,7 +61,7 @@ func pagination(query url.Values) (int, int, error) {
 	return offset, count, nil
 }
 
-func handleQuery(w http.ResponseWriter, r *http.Request) (*apiRowData, error) {
+func handleQuery(r *http.Request) (*apiRowData, error) {
 	t := time.Now()
 
 	query := r.URL.Query()
@@ -118,7 +118,7 @@ func handleQuery(w http.ResponseWriter, r *http.Request) (*apiRowData, error) {
 }
 
 func rootHandlerV1(w http.ResponseWriter, r *http.Request) {
-	data, err := handleQuery(w, r)
+	data, err := handleQuery(r)
 	if err != nil {
 		apiErr(w, err.Error())
 		return
@@ -132,7 +132,7 @@ func rootHandlerV1(w http.ResponseWriter, r *http.Request) {
 }
 
 func liveHandlerV1(w http.ResponseWriter, r *http.Request) {
-	data, err := handleQuery(w, r)
+	data, err := handleQuery(r)
 	if err != nil {
 		apiErr(w, err.Error())
 		return
@@ -237,7 +237,7 @@ func statsHandlerV1(w http.ResponseWriter, r *http.Request) {
 }
 
 func rssHandlerV1(w http.ResponseWriter, r *http.Request) {
-	data, err := handleQuery(w, r)
+	data, err := handleQuery(r)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

@@ -35,7 +35,7 @@ func newRouter() *mux.Router {
 	return router
 }
 
-func notFound(w http.ResponseWriter, r *http.Request) {
+func notFound(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
 	apiErr(w, "404 Not Found")
 }

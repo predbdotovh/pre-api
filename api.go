@@ -33,10 +33,6 @@ func apiSuccess(w http.ResponseWriter, o interface{}) error {
 	return apiSend(w, apiResponse{"success", "", o})
 }
 
-func apiSuccessStr(w http.ResponseWriter, o interface{}, msg string) error {
-	return apiSend(w, apiResponse{"success", msg, o})
-}
-
 func apiFail(w http.ResponseWriter, o interface{}) error {
 	return apiSend(w, apiResponse{"error", "", o})
 }

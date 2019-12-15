@@ -25,7 +25,7 @@ Current base URL is : [https://predb.ovh/api/v1/](https://predb.ovh/api/v1/)
 
 ## Responses
 
-The API will always return HTTP 200 with application/json content.
+The API will always return HTTP 200 with application/json content (except for [RSS](#get-rss)).
 
 On success :
 
@@ -237,10 +237,33 @@ This method is the exact clone of [GET /](#get), formatted using RSS2.0 spec.
 - Usage : Get releases info using a RSS reader
 - Rate limit : 30/60s
 
-
 #### Example
 
 - [https://predb.ovh/api/v1/rss](https://predb.ovh/api/v1/rss)
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>PreDB</title>
+        <link>https://predb.ovh/</link>
+        <description></description>
+        <pubDate>Sun, 15 Dec 2019 21:23:59 +0100</pubDate>
+        <item>
+            <title>Le.Steppe.Dell.Asia.La.Piu.Grande.Steppa.Della.Terra.iTALiAN.HDTV.x264-iDiB</title>
+            <link>https://predb.ovh/?id=9643108</link>
+            <description>Cat:TV-SD-X264 | Genre: | Size:0MB | Files:0 | ID:9643108</description>
+            <pubDate>Sun, 15 Dec 2019 21:23:49 +0100</pubDate>
+        </item>
+        <item>
+            <title>Le.Steppe.Dell.Asia.La.Piu.Grande.Steppa.Della.Terra.iTALiAN.720p.HDTV.x264-iDiB</title>
+            <link>https://predb.ovh/?id=9643107</link>
+            <description>Cat:TV-HD-X264 | Genre: | Size:0MB | Files:0 | ID:9643107</description>
+            <pubDate>Sun, 15 Dec 2019 21:23:48 +0100</pubDate>
+        </item>
+    </channel>
+</rss>
+```
 
 ### GET /stats
 

@@ -253,7 +253,7 @@ func rssHandlerV1(w http.ResponseWriter, r *http.Request) {
 		feed.Items = append(feed.Items, &feeds.Item{
 			Title:       row.Name,
 			Link:        &feeds.Link{Href: fmt.Sprintf("https://predb.ovh/?id=%d", row.ID)},
-			Description: fmt.Sprintf("Cat:%s | Genre:%s | Size:%f | Files:%d | ID:%d", row.Cat, row.Genre, row.Size, row.Files, row.ID),
+			Description: fmt.Sprintf("Cat:%s | Genre:%s | Size:%0.fMB | Files:%d | ID:%d", row.Cat, row.Genre, row.Size, row.Files, row.ID),
 			Created:     time.Unix(int64(row.PreAt), 0),
 		})
 	}

@@ -79,7 +79,7 @@ func handleQuery(r *http.Request) (*apiRowData, error) {
 	}
 	defer tx.Commit()
 
-	rows := make([]sphinxRow, 0)
+	rows := make([]preRow, 0)
 	if idStr != "" {
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
@@ -156,7 +156,7 @@ func preTriggerHandlerV1(w http.ResponseWriter, r *http.Request) {
 	}
 
 	decoder := json.NewDecoder(r.Body)
-	var p sphinxRow
+	var p preRow
 	err := decoder.Decode(&p)
 	if err != nil {
 		apiFail(w, err)

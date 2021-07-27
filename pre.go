@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-type sphinxRow struct {
+type preRow struct {
 	ID    int     `json:"id"`
 	Name  string  `json:"name"`
 	Team  string  `json:"team"`
@@ -26,14 +26,14 @@ var replacer = strings.NewReplacer("(", "\\(", ")", "\\)")
 const preColumns = "id, name, team, cat, genre, url, size, files, pre_at"
 const defaultMaxMatches = 1000
 
-func (p *sphinxRow) proc() {
+func (p *preRow) proc() {
 	p.Size /= 1000
 }
 
-func scanPresRows(rows *sql.Rows, appendNukes bool) []sphinxRow {
-	res := make([]sphinxRow, 0)
+func scanPresRows(rows *sql.Rows, appendNukes bool) []preRow {
+	res := make([]preRow, 0)
 	for rows.Next() {
-		var r sphinxRow
+		var r preRow
 		err := rows.Scan(&r.ID, &r.Name, &r.Team, &r.Cat, &r.Genre, &r.URL, &r.Size, &r.Files, &r.PreAt)
 		if err != nil {
 			log.Print(err)
@@ -51,10 +51,10 @@ func scanPresRows(rows *sql.Rows, appendNukes bool) []sphinxRow {
 	return res
 }
 
-func getPre(db *sql.DB, preID int, withNuke bool) (*sphinxRow, error) {
+func getPre(db *sql.DB, preID int, withNuke bool) (*preRow, error) {
 	sqlQuery := fmt.Sprintf("SELECT %s FROM %s WHERE id = ? OPTION reverse_scan = 1", preColumns, sphinxTable)
 
-	var r sphinxRow
+	var r preRow
 
 	err := db.QueryRow(sqlQuery, preID).Scan(&r.ID, &r.Name, &r.Team, &r.Cat, &r.Genre, &r.URL, &r.Size, &r.Files, &r.PreAt)
 	if err != nil {
@@ -69,10 +69,10 @@ func getPre(db *sql.DB, preID int, withNuke bool) (*sphinxRow, error) {
 	return &r, nil
 }
 
-func getPresById(tx *sql.Tx, preID int, withNuke bool) ([]sphinxRow, error) {
+func getPresById(tx *sql.Tx, preID int, withNuke bool) ([]preRow, error) {
 	sqlQuery := fmt.Sprintf("SELECT %s FROM %s WHERE id = ? OPTION reverse_scan = 1", preColumns, sphinxTable)
 
-	var r sphinxRow
+	var r preRow
 
 	err := tx.QueryRow(sqlQuery, preID).Scan(&r.ID, &r.Name, &r.Team, &r.Cat, &r.Genre, &r.URL, &r.Size, &r.Files, &r.PreAt)
 	if err != nil {
@@ -84,10 +84,10 @@ func getPresById(tx *sql.Tx, preID int, withNuke bool) ([]sphinxRow, error) {
 		r.fetchNuke(mysql)
 	}
 
-	return []sphinxRow{r}, nil
+	return []preRow{r}, nil
 }
 
-func searchPres(tx *sql.Tx, q string, offsetInt, countInt int, withNukes bool) ([]sphinxRow, error) {
+func searchPres(tx *sql.Tx, q string, offsetInt, countInt int, withNukes bool) ([]preRow, error) {
 	sqlQuery := fmt.Sprintf("SELECT %s FROM %s WHERE MATCH(?) ORDER BY id DESC LIMIT %d,%d OPTION reverse_scan = 1", preColumns, sphinxTable, offsetInt, countInt)
 
 	if offsetInt+countInt > defaultMaxMatches {
@@ -103,7 +103,7 @@ func searchPres(tx *sql.Tx, q string, offsetInt, countInt int, withNukes bool) (
 	return scanPresRows(sqlRows, withNukes), nil
 }
 
-func latestPres(tx *sql.Tx, offsetInt, countInt int, withNukes bool) ([]sphinxRow, error) {
+func latestPres(tx *sql.Tx, offsetInt, countInt int, withNukes bool) ([]preRow, error) {
 	sqlQuery := fmt.Sprintf("SELECT %s FROM %s ORDER BY id DESC LIMIT %d,%d OPTION reverse_scan = 1", preColumns, sphinxTable, offsetInt, countInt)
 
 	if offsetInt+countInt > defaultMaxMatches {
@@ -119,7 +119,7 @@ func latestPres(tx *sql.Tx, offsetInt, countInt int, withNukes bool) ([]sphinxRo
 	return scanPresRows(sqlRows, withNukes), nil
 }
 
-func (p *sphinxRow) fetchNuke(db *sql.DB) {
+func (p *preRow) fetchNuke(db *sql.DB) {
 	n, err := getNuke(db, p.ID)
 	if err != nil {
 		return
@@ -127,7 +127,7 @@ func (p *sphinxRow) fetchNuke(db *sql.DB) {
 	p.setNuke(n)
 }
 
-func (p *sphinxRow) setNuke(n *nuke) {
+func (p *preRow) setNuke(n *nuke) {
 	if n != nil {
 		n.setType()
 		p.Nuke = n

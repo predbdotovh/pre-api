@@ -13,12 +13,12 @@ type apiResponse struct {
 }
 
 type apiRowData struct {
-	RowCount int         `json:"rowCount"`
-	Rows     []sphinxRow `json:"rows"`
-	Offset   int         `json:"offset"`
-	ReqCount int         `json:"reqCount"`
-	Total    int         `json:"total"`
-	Time     float64     `json:"time"`
+	RowCount int      `json:"rowCount"`
+	Rows     []preRow `json:"rows"`
+	Offset   int      `json:"offset"`
+	ReqCount int      `json:"reqCount"`
+	Total    int      `json:"total"`
+	Time     float64  `json:"time"`
 }
 
 type apiStatsData struct {

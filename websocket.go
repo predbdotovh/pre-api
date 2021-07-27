@@ -9,8 +9,8 @@ import (
 )
 
 type triggerAction struct {
-	Action string     `json:"action"`
-	Row    *sphinxRow `json:"row"`
+	Action string  `json:"action"`
+	Row    *preRow `json:"row"`
 }
 
 type wsClient struct {

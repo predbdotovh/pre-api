@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -120,7 +121,7 @@ func handleQuery(r *http.Request) (*apiRowData, error) {
 func rootHandlerV1(w http.ResponseWriter, r *http.Request) {
 	data, err := handleQuery(r)
 	if err != nil {
-		apiErr(w, err.Error())
+		apiErr(w, err)
 		return
 	}
 
@@ -134,7 +135,7 @@ func rootHandlerV1(w http.ResponseWriter, r *http.Request) {
 func liveHandlerV1(w http.ResponseWriter, r *http.Request) {
 	data, err := handleQuery(r)
 	if err != nil {
-		apiErr(w, err.Error())
+		apiErr(w, err)
 		return
 	}
 
@@ -151,7 +152,7 @@ func websocketHandlerV1(w http.ResponseWriter, r *http.Request) {
 
 func preTriggerHandlerV1(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("x-forwarded-for") != "" {
-		apiErr(w, "Not authorized")
+		apiErr(w, errors.New("not authorized"))
 		return
 	}
 
@@ -172,7 +173,7 @@ func preTriggerHandlerV1(w http.ResponseWriter, r *http.Request) {
 
 func nukeTriggerHandlerV1(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("x-forwarded-for") != "" {
-		apiErr(w, "Not authorized")
+		apiErr(w, errors.New("Not authorized"))
 		return
 	}
 
@@ -202,20 +203,20 @@ func statsHandlerV1(w http.ResponseWriter, r *http.Request) {
 
 	tx, err := sphinx.Begin()
 	if err != nil {
-		apiErr(w, err.Error())
+		apiErr(w, err)
 		return
 	}
 	defer tx.Commit()
 
 	_, err = latestPres(tx, 0, 0, false)
 	if err != nil {
-		apiErr(w, err.Error())
+		apiErr(w, err)
 		return
 	}
 
 	meta, err := sphinxMeta(tx)
 	if err != nil {
-		apiErr(w, err.Error())
+		apiErr(w, err)
 		return
 	}
 

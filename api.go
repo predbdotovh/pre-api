@@ -37,8 +37,8 @@ func apiFail(w http.ResponseWriter, o interface{}) error {
 	return apiSend(w, apiResponse{"error", "", o})
 }
 
-func apiErr(w http.ResponseWriter, msg string) error {
-	return apiSend(w, apiResponse{"error", msg, nil})
+func apiErr(w http.ResponseWriter, err error) error {
+	return apiSend(w, apiResponse{"error", err.Error(), nil})
 }
 
 func apiSend(w http.ResponseWriter, o interface{}) error {

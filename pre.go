@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 )
 
@@ -90,7 +91,7 @@ func searchPres(tx *sql.Tx, q string, offsetInt, countInt int, withNukes bool) (
 	sqlQuery := fmt.Sprintf("SELECT %s FROM %s WHERE MATCH(?) ORDER BY id DESC LIMIT %d,%d OPTION reverse_scan = 1", preColumns, sphinxTable, offsetInt, countInt)
 
 	if offsetInt+countInt > defaultMaxMatches {
-		sqlQuery += ", max_matches = " + string(offsetInt+countInt)
+		sqlQuery += ", max_matches = " + strconv.Itoa(offsetInt+countInt)
 	}
 
 	sqlRows, err := tx.Query(sqlQuery, replacer.Replace(q))
@@ -106,7 +107,7 @@ func latestPres(tx *sql.Tx, offsetInt, countInt int, withNukes bool) ([]sphinxRo
 	sqlQuery := fmt.Sprintf("SELECT %s FROM %s ORDER BY id DESC LIMIT %d,%d OPTION reverse_scan = 1", preColumns, sphinxTable, offsetInt, countInt)
 
 	if offsetInt+countInt > defaultMaxMatches {
-		sqlQuery += ", max_matches = " + string(offsetInt+countInt)
+		sqlQuery += ", max_matches = " + strconv.Itoa(offsetInt+countInt)
 	}
 
 	sqlRows, err := tx.Query(sqlQuery)

@@ -15,10 +15,13 @@ Disclaimer 3 : Don't know what scene releases are ? You're probably at the wrong
 
 ## Status
 
-This API is currently usable, and used by [demo website](https://predb.ovh/) which is also [open-sourced](https://github.com/predbdotovh/website-vuejs).
+This API is currently usable, and used by [demo website](https://predb.ovh/) which is
+also [open-sourced](https://github.com/predbdotovh/website-vuejs).
 
-As the API is fed by Sphinx, results are hard limited at 1000, and I don't expect to modify this behaviour in the future.
-There will be an automatic weekly-ish export of the entire database at some point.
+As the API is fed by Sphinx, results are hard limited at 1000, and I don't expect to modify this behaviour in the
+future.
+
+A monthly-ish sql dump is available here : [https://predb.ovh/download/](https://predb.ovh/download/)
 
 ## API versions
 
@@ -72,8 +75,9 @@ All parameters are optional
 | q         | string | Query                                |
 | id        | int    | Specific pre ID (overwrites q param) |
 
-Query is directly fed to a SphinxSearch engine, allowing [specific syntax](http://sphinxsearch.com/docs/current/extended-syntax.html).
-Note: cat and team are indexed, allowing fast queries like
+Query is directly fed to a SphinxSearch engine,
+allowing [specific syntax](http://sphinxsearch.com/docs/current/extended-syntax.html). Note: cat and team are indexed,
+allowing fast queries like
 [https://predb.ovh/api/v1/?q=@cat%20EBOOK](https://predb.ovh/api/v1/?q=@cat%20EBOOK)
 
 #### Response
@@ -270,8 +274,7 @@ This method is the exact clone of [GET /](#get), formatted using RSS2.0 spec.
 
 ### GET /stats
 
-Basic stats about internal database health
-Generate database statistics
+Basic stats about internal database health.
 
 - Cache : 60 seconds
 - Usage : Keep track of current database status and response times
@@ -308,8 +311,8 @@ None
 
 ### GET /ws
 
-A websocket endpoint, sending near realtime updates.
-To use this, you need to bind using a [Websocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications).
+A websocket endpoint, sending near realtime updates. To use this, you need to bind using
+a [Websocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications).
 
 - Cache : None
 - Usage : Realtime updates

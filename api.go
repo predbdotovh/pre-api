@@ -27,6 +27,12 @@ type apiStatsData struct {
 	Time  float64   `json:"time"`
 }
 
+type apiTeamsData struct {
+	RowCount int       `json:"rowCount"`
+	Rows     []teamRow `json:"rows"`
+	Time     float64   `json:"time"`
+}
+
 const indent = "    "
 
 func apiSuccess(w http.ResponseWriter, o interface{}) error {

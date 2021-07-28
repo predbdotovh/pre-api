@@ -135,6 +135,42 @@ func rootHandlerV1(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func teamsHandlerV1(w http.ResponseWriter, _ *http.Request) {
+	t := time.Now()
+
+	tx, err := sphinx.Begin()
+	if err != nil {
+		err = apiErr(w, err)
+		if err != nil {
+			log.Println(err)
+		}
+		return
+	}
+	defer tx.Commit()
+
+	rows, err := listTeams(tx)
+	if err != nil {
+		err = apiErr(w, err)
+		if err != nil {
+			log.Println(err)
+		}
+
+		return
+	}
+
+	data := &apiTeamsData{
+		RowCount: len(rows),
+		Rows:     rows,
+		Time:     time.Since(t).Seconds(),
+	}
+
+	w.Header().Set("Cache-Control", "public, max-age=3600")
+	err = apiSuccess(w, data)
+	if err != nil {
+		log.Println(err)
+	}
+}
+
 func liveHandlerV1(w http.ResponseWriter, r *http.Request) {
 	data, err := handleQuery(r)
 	if err != nil {

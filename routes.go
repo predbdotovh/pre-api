@@ -17,6 +17,7 @@ type jsonMuxRoutes map[string]muxRoutes
 var jsonRoutes = jsonMuxRoutes{
 	"v1": muxRoutes{
 		muxRoute{"Root", "GET", "/", rootHandlerV1},
+		muxRoute{"Teams", "GET", "/teams", teamsHandlerV1},
 		muxRoute{"Stats", "GET", "/stats", statsHandlerV1},
 		muxRoute{"Live", "GET", "/live", liveHandlerV1},
 		muxRoute{"Rss", "GET", "/rss", rssHandlerV1},

@@ -272,6 +272,64 @@ This method is the exact clone of [GET /](#get), formatted using RSS2.0 spec.
 </rss>
 ```
 
+### GET /teams
+
+Teams stats with first and latest pre, and total recorded pre.
+
+This is currently hard limited to 1000 results, may be subject to change if necessary.
+
+- Cache : 3600 seconds
+- Usage : Teams statistics
+
+#### Parameters
+
+None
+
+#### Response
+
+##### Data
+
+| json key | type      | content                       |
+| -------- | --------- | ----------------------------- |
+| rowCount | int       | Count of rows returned        |
+| time     | float     | Request internal duration     |
+| rows     | []team    | Array of [teams](#team)       |
+
+##### Team
+
+| json key  | type      | content                               |
+| --------- | --------- | ------------------------------------- |
+| team      | string    | Release group name                    |
+| firstPre  | int       | First recorded release pre timestamp  |
+| latestPre | int       | Latest recorded release pre timestamp |
+| count     | int       | Total team pre count                  |
+
+#### Example
+
+- [https://predb.ovh/api/v1/teams](https://predb.ovh/api/v1/teams)
+
+```
+{
+    "status": "success",
+    "message": "",
+    "data": {
+        "rowCount": 1000,
+        "rows": [
+            {
+                "team": "KTR",
+                "firstPre": 1203561700,
+                "latestPre": 1598341396,
+                "count": 307933
+            },
+            {
+                "snip": "Content snipped for lisibility"
+            },
+        ],
+        "time": 5.465514844
+    }
+}
+```
+
 ### GET /stats
 
 Basic stats about internal database health.

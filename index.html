@@ -7,13 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="None">
   
+  
   <link rel="shortcut icon" href="img/favicon.ico">
-  <title>Home - Predb.ovh API</title>
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <title>Predb.ovh API</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
 
-  <link rel="stylesheet" href="css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
   
   <script>
     // Current page data
@@ -24,9 +25,8 @@
   
   <script src="js/jquery-2.1.1.min.js" defer></script>
   <script src="js/modernizr-2.8.3.min.js" defer></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
-  
 </head>
 
 <body class="wy-body-for-nav" role="document">
@@ -35,47 +35,89 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
         <a href="." class="icon icon-home"> Predb.ovh API</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-	<ul class="current">
-	  
-          
-            <li class="toctree-l1 current">
-		
-    <a class="current" href=".">Home</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l2"><a href="#predbovh-api-documentation">Predb.ovh API documentation</a></li>
-    
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#disclaimers">Disclaimers</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#status">Status</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#api-versions">API versions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#responses">Responses</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#endpoints">Endpoints</a>
         <ul>
-        
-            <li><a class="toctree-l3" href="#disclaimers">Disclaimers</a></li>
-        
-            <li><a class="toctree-l3" href="#status">Status</a></li>
-        
-            <li><a class="toctree-l3" href="#api-versions">API versions</a></li>
-        
-            <li><a class="toctree-l3" href="#responses">Responses</a></li>
-        
-            <li><a class="toctree-l3" href="#endpoints">Endpoints</a></li>
-        
+    <li class="toctree-l3"><a class="reference internal" href="#get">GET /</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#response">Response</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#example">Example</a>
+    </li>
         </ul>
-    
-
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-live">GET /live</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#example_1">Example</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-rss">GET /rss</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#example_2">Example</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-teams">GET /teams</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#parameters_1">Parameters</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#response_1">Response</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#example_3">Example</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-stats">GET /stats</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#parameters_2">Parameters</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#response_2">Response</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#example_4">Example</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-ws">GET /ws</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#parameters_3">Parameters</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#response_3">Response</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#example_5">Example</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
     </ul>
-	    </li>
-          
-        </ul>
+                    </li>
+                </ul>
       </div>
-      &nbsp;
+    </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -100,8 +142,10 @@
       
     </li>
   </ul>
+  
   <hr/>
 </div>
+
           <div role="main">
             <div class="section">
               
@@ -114,9 +158,11 @@
 <p>Disclaimer 2 : Once again, this API does <strong>NOT</strong> host any content, only metadata associated to scene releases.</p>
 <p>Disclaimer 3 : Don't know what scene releases are ? You're probably at the wrong place.</p>
 <h2 id="status">Status</h2>
-<p>This API is currently usable, and used by <a href="https://predb.ovh/">demo website</a> which is also <a href="https://github.com/predbdotovh/website-vuejs">open-sourced</a>.</p>
-<p>As the API is fed by Sphinx, results are hard limited at 1000, and I don't expect to modify this behaviour in the future.
-There will be an automatic weekly-ish export of the entire database at some point.</p>
+<p>This API is currently usable, and used by <a href="https://predb.ovh/">demo website</a> which is
+also <a href="https://github.com/predbdotovh/website-vuejs">open-sourced</a>.</p>
+<p>As the API is fed by Sphinx, results are hard limited at 1000, and I don't expect to modify this behaviour in the
+future.</p>
+<p>A monthly-ish sql dump is available here : <a href="https://predb.ovh/download/">https://predb.ovh/download/</a></p>
 <h2 id="api-versions">API versions</h2>
 <p>Current version is <strong>v1</strong>. This version is expected to be updated on each breaking change.</p>
 <p>Current base URL is : <a href="https://predb.ovh/api/v1/">https://predb.ovh/api/v1/</a></p>
@@ -129,7 +175,6 @@ There will be an automatic weekly-ish export of the entire database at some poin
     &quot;data&quot;: &quot;... See endpoints responses ...&quot;
 }
 </code></pre>
-
 <p>On failure :</p>
 <pre><code>{
     &quot;status&quot;: &quot;error&quot;,
@@ -137,7 +182,6 @@ There will be an automatic weekly-ish export of the entire database at some poin
     &quot;data&quot;: null
 }
 </code></pre>
-
 <h2 id="endpoints">Endpoints</h2>
 <h3 id="get">GET /</h3>
 <p>List releases matching a set of filters given in parameters</p>
@@ -184,8 +228,9 @@ There will be an automatic weekly-ish export of the entire database at some poin
 </tr>
 </tbody>
 </table>
-<p>Query is directly fed to a SphinxSearch engine, allowing <a href="http://sphinxsearch.com/docs/current/extended-syntax.html">specific syntax</a>.
-Note: cat and team are indexed, allowing fast queries like
+<p>Query is directly fed to a SphinxSearch engine,
+allowing <a href="http://sphinxsearch.com/docs/current/extended-syntax.html">specific syntax</a>. Note: cat and team are indexed,
+allowing fast queries like
 <a href="https://predb.ovh/api/v1/?q=@cat%20EBOOK">https://predb.ovh/api/v1/?q=@cat%20EBOOK</a></p>
 <h4 id="response">Response</h4>
 <h5 id="data">Data</h5>
@@ -416,7 +461,6 @@ Note: cat and team are indexed, allowing fast queries like
     }
 }
 </code></pre>
-
 <h3 id="get-live">GET /live</h3>
 <p>This method is the exact clone of <a href="#get">GET /</a>, without any HTTP cache.</p>
 <ul>
@@ -470,7 +514,6 @@ Note: cat and team are indexed, allowing fast queries like
     }
 }
 </code></pre>
-
 <h3 id="get-rss">GET /rss</h3>
 <p>This method is the exact clone of <a href="#get">GET /</a>, formatted using RSS2.0 spec.</p>
 <ul>
@@ -504,18 +547,109 @@ Note: cat and team are indexed, allowing fast queries like
     &lt;/channel&gt;
 &lt;/rss&gt;
 </code></pre>
-
-<h3 id="get-stats">GET /stats</h3>
-<p>Basic stats about internal database health
-Generate database statistics</p>
+<h3 id="get-teams">GET /teams</h3>
+<p>Teams stats with first and latest pre, and total recorded pre.</p>
+<p>This is currently hard limited to 1000 results, may be subject to change if necessary.</p>
 <ul>
-<li>Cache : 60 seconds</li>
-<li>Usage : Keep track of current database status and response times</li>
+<li>Cache : 3600 seconds</li>
+<li>Usage : Teams statistics</li>
 </ul>
 <h4 id="parameters_1">Parameters</h4>
 <p>None</p>
 <h4 id="response_1">Response</h4>
 <h5 id="data_1">Data</h5>
+<table>
+<thead>
+<tr>
+<th>json key</th>
+<th>type</th>
+<th>content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rowCount</td>
+<td>int</td>
+<td>Count of rows returned</td>
+</tr>
+<tr>
+<td>time</td>
+<td>float</td>
+<td>Request internal duration</td>
+</tr>
+<tr>
+<td>rows</td>
+<td>[]team</td>
+<td>Array of <a href="#team">teams</a></td>
+</tr>
+</tbody>
+</table>
+<h5 id="team">Team</h5>
+<table>
+<thead>
+<tr>
+<th>json key</th>
+<th>type</th>
+<th>content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>team</td>
+<td>string</td>
+<td>Release group name</td>
+</tr>
+<tr>
+<td>firstPre</td>
+<td>int</td>
+<td>First recorded release pre timestamp</td>
+</tr>
+<tr>
+<td>latestPre</td>
+<td>int</td>
+<td>Latest recorded release pre timestamp</td>
+</tr>
+<tr>
+<td>count</td>
+<td>int</td>
+<td>Total team pre count</td>
+</tr>
+</tbody>
+</table>
+<h4 id="example_3">Example</h4>
+<ul>
+<li><a href="https://predb.ovh/api/v1/teams">https://predb.ovh/api/v1/teams</a></li>
+</ul>
+<pre><code>{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;&quot;,
+    &quot;data&quot;: {
+        &quot;rowCount&quot;: 1000,
+        &quot;rows&quot;: [
+            {
+                &quot;team&quot;: &quot;KTR&quot;,
+                &quot;firstPre&quot;: 1203561700,
+                &quot;latestPre&quot;: 1598341396,
+                &quot;count&quot;: 307933
+            },
+            {
+                &quot;snip&quot;: &quot;Content snipped for lisibility&quot;
+            },
+        ],
+        &quot;time&quot;: 5.465514844
+    }
+}
+</code></pre>
+<h3 id="get-stats">GET /stats</h3>
+<p>Basic stats about internal database health.</p>
+<ul>
+<li>Cache : 60 seconds</li>
+<li>Usage : Keep track of current database status and response times</li>
+</ul>
+<h4 id="parameters_2">Parameters</h4>
+<p>None</p>
+<h4 id="response_2">Response</h4>
+<h5 id="data_2">Data</h5>
 <table>
 <thead>
 <tr>
@@ -542,7 +676,7 @@ Generate database statistics</p>
 </tr>
 </tbody>
 </table>
-<h4 id="example_3">Example</h4>
+<h4 id="example_4">Example</h4>
 <ul>
 <li><a href="https://predb.ovh/api/v1/stats">https://predb.ovh/api/v1/stats</a></li>
 </ul>
@@ -556,17 +690,16 @@ Generate database statistics</p>
     }
 }
 </code></pre>
-
 <h3 id="get-ws">GET /ws</h3>
-<p>A websocket endpoint, sending near realtime updates.
-To use this, you need to bind using a <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications">Websocket</a>.</p>
+<p>A websocket endpoint, sending near realtime updates. To use this, you need to bind using
+a <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications">Websocket</a>.</p>
 <ul>
 <li>Cache : None</li>
 <li>Usage : Realtime updates</li>
 </ul>
-<h4 id="parameters_2">Parameters</h4>
+<h4 id="parameters_3">Parameters</h4>
 <p>There is no parameter, and any input on the websocket is discarded</p>
-<h4 id="response_2">Response</h4>
+<h4 id="response_3">Response</h4>
 <p>There is no response per se, but a range of frames sent over time</p>
 <h5 id="frame">Frame</h5>
 <p>Each frame represents an action towards a specific release.</p>
@@ -635,7 +768,7 @@ To use this, you need to bind using a <a href="https://developer.mozilla.org/en-
 </tr>
 </tbody>
 </table>
-<h4 id="example_4">Example</h4>
+<h4 id="example_5">Example</h4>
 <ul>
 <li><a href="https://predb.ovh/api/v1/ws">https://predb.ovh/api/v1/ws</a></li>
 </ul>
@@ -668,7 +801,7 @@ To use this, you need to bind using a <a href="https://developer.mozilla.org/en-
     
   </div>
 
-  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
       
         </div>
@@ -678,21 +811,27 @@ To use this, you need to bind using a <a href="https://developer.mozilla.org/en-
 
   </div>
 
-  <div class="rst-versions" role="note" style="cursor: pointer">
-    <span class="rst-current-version" data-toggle="rst-current-version">
-      
-      
-      
-    </span>
+  <div class="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
 </div>
     <script>var base_url = '.';</script>
+    <script src="js/theme_extra.js" defer></script>
     <script src="js/theme.js" defer></script>
       <script src="search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
 
 </body>
 </html>
 
 <!--
-MkDocs version : 1.0.4
-Build Date UTC : 2019-12-15 20:46:20
+MkDocs version : 1.2.2
+Build Date UTC : 2021-07-28 13:29:55.274553+00:00
 -->

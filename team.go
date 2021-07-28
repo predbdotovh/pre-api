@@ -9,7 +9,7 @@ import (
 type teamRow struct {
 	Team      string `json:"team"`
 	FirstPre  int    `json:"firstPre"`
-	LatestPre int    `json:"LatestPre"`
+	LatestPre int    `json:"latestPre"`
 	Count     int    `json:"count"`
 }
 

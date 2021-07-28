@@ -30,4 +30,3 @@ func httpLogger(inner http.Handler, name string) http.Handler {
 		)
 	})
 }
-

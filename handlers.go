@@ -27,7 +27,7 @@ func pagination(query url.Values) (int, int, error) {
 	if countStr != "" {
 		count, err = strconv.Atoi(countStr)
 		if err != nil {
-			return 0, 0, fmt.Errorf("Incorrect parameters (count)")
+			return 0, 0, fmt.Errorf("incorrect parameters (count)")
 		}
 
 	}
@@ -42,7 +42,7 @@ func pagination(query url.Values) (int, int, error) {
 	if pageStr != "" {
 		page, err := strconv.Atoi(pageStr)
 		if err != nil {
-			return 0, 0, fmt.Errorf("Incorrect parameters (page)")
+			return 0, 0, fmt.Errorf("incorrect parameters (page)")
 		}
 
 		offset = (page - 1) * count
@@ -52,7 +52,7 @@ func pagination(query url.Values) (int, int, error) {
 	if offsetStr != "" {
 		offset, err = strconv.Atoi(offsetStr)
 		if err != nil {
-			return 0, 0, fmt.Errorf("Incorrect parameters (offset)")
+			return 0, 0, fmt.Errorf("incorrect parameters (offset)")
 		}
 	}
 	if offset < 0 {
@@ -121,7 +121,10 @@ func handleQuery(r *http.Request) (*apiRowData, error) {
 func rootHandlerV1(w http.ResponseWriter, r *http.Request) {
 	data, err := handleQuery(r)
 	if err != nil {
-		apiErr(w, err)
+		err = apiErr(w, err)
+		if err != nil {
+			log.Println(err)
+		}
 		return
 	}
 
@@ -135,7 +138,10 @@ func rootHandlerV1(w http.ResponseWriter, r *http.Request) {
 func liveHandlerV1(w http.ResponseWriter, r *http.Request) {
 	data, err := handleQuery(r)
 	if err != nil {
-		apiErr(w, err)
+		err = apiErr(w, err)
+		if err != nil {
+			log.Println(err)
+		}
 		return
 	}
 
@@ -152,15 +158,20 @@ func websocketHandlerV1(w http.ResponseWriter, r *http.Request) {
 
 func preTriggerHandlerV1(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("x-forwarded-for") != "" {
-		apiErr(w, errors.New("not authorized"))
+		err := apiErr(w, errors.New("not authorized"))
+		if err != nil {
+			log.Println(err)
+		}
 		return
 	}
 
-	decoder := json.NewDecoder(r.Body)
 	var p preRow
-	err := decoder.Decode(&p)
+	err := json.NewDecoder(r.Body).Decode(&p)
 	if err != nil {
-		apiFail(w, err)
+		err = apiFail(w, err)
+		if err != nil {
+			log.Println(err)
+		}
 		return
 	}
 	defer r.Body.Close()
@@ -168,55 +179,78 @@ func preTriggerHandlerV1(w http.ResponseWriter, r *http.Request) {
 	p.proc()
 
 	backendUpdates <- triggerAction{Action: mux.Vars(r)["action"], Row: &p}
-	apiSuccess(w, nil)
+	err = apiSuccess(w, nil)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func nukeTriggerHandlerV1(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("x-forwarded-for") != "" {
-		apiErr(w, errors.New("Not authorized"))
+		err := apiErr(w, errors.New("not authorized"))
+		if err != nil {
+			log.Println(err)
+		}
 		return
 	}
 
-	decoder := json.NewDecoder(r.Body)
 	var n nuke
-	err := decoder.Decode(&n)
+	err := json.NewDecoder(r.Body).Decode(&n)
 	if err != nil {
-		apiFail(w, err)
+		err = apiFail(w, err)
+		if err != nil {
+			log.Println(err)
+		}
 		return
 	}
 	defer r.Body.Close()
 
 	p, err := getPre(sphinx, n.PreID, false)
 	if err != nil {
-		apiFail(w, err)
+		err = apiFail(w, err)
+		if err != nil {
+			log.Println(err)
+		}
 		return
 	}
 
 	p.setNuke(&n)
 
 	backendUpdates <- triggerAction{Action: n.Type, Row: p}
-	apiSuccess(w, nil)
+	err = apiSuccess(w, nil)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
-func statsHandlerV1(w http.ResponseWriter, r *http.Request) {
+func statsHandlerV1(w http.ResponseWriter, _ *http.Request) {
 	t := time.Now()
 
 	tx, err := sphinx.Begin()
 	if err != nil {
-		apiErr(w, err)
+		err = apiErr(w, err)
+		if err != nil {
+			log.Println(err)
+		}
 		return
 	}
 	defer tx.Commit()
 
 	_, err = latestPres(tx, 0, 0, false)
 	if err != nil {
-		apiErr(w, err)
+		err = apiErr(w, err)
+		if err != nil {
+			log.Println(err)
+		}
 		return
 	}
 
 	meta, err := sphinxMeta(tx)
 	if err != nil {
-		apiErr(w, err)
+		err = apiErr(w, err)
+		if err != nil {
+			log.Println(err)
+		}
 		return
 	}
 
@@ -265,5 +299,8 @@ func rssHandlerV1(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte(rss))
+	_, err = w.Write([]byte(rss))
+	if err != nil {
+		log.Println(err)
+	}
 }

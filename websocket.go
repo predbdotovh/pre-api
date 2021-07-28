@@ -73,15 +73,21 @@ func (c *wsClient) writePump() {
 	for {
 		select {
 		case rls := <-c.send:
-			c.conn.SetWriteDeadline(time.Now().Add(writeTimeout))
-			err := c.conn.WriteJSON(rls)
+			err := c.conn.SetWriteDeadline(time.Now().Add(writeTimeout))
+			if err != nil {
+				log.Println("WRITE DEADLINE ERR", err)
+			}
+			err = c.conn.WriteJSON(rls)
 			if err != nil {
 				log.Println("WRITE ERR", err)
 				return
 			}
 		case <-ticker.C:
-			c.conn.SetWriteDeadline(time.Now().Add(writeTimeout))
-			err := c.conn.WriteMessage(websocket.PingMessage, []byte{})
+			err := c.conn.SetWriteDeadline(time.Now().Add(writeTimeout))
+			if err != nil {
+				log.Println("PING DEADLINE ERR", err)
+			}
+			err = c.conn.WriteMessage(websocket.PingMessage, []byte{})
 			if err != nil {
 				log.Println("PING ERR", err)
 				return
@@ -91,9 +97,16 @@ func (c *wsClient) writePump() {
 }
 
 func (c *wsClient) readPump() {
-	c.conn.SetReadDeadline(time.Now().Add(pongWait))
+	err := c.conn.SetReadDeadline(time.Now().Add(pongWait))
+	if err != nil {
+		log.Println("READ DEADLINE ERR", err)
+		return
+	}
 	c.conn.SetPongHandler(func(string) error {
-		c.conn.SetReadDeadline(time.Now().Add(pongWait))
+		err = c.conn.SetReadDeadline(time.Now().Add(pongWait))
+		if err != nil {
+			log.Println("READ DEADLINE ERR", err)
+		}
 		return nil
 	})
 	for {

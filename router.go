@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"log"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -54,5 +55,8 @@ func newRouter() *mux.Router {
 
 func notFound(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
-	apiErr(w, errors.New("404 Not Found"))
+	err := apiErr(w, errors.New("not Found"))
+	if err != nil {
+		log.Println(err)
+	}
 }

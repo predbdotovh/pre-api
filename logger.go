@@ -3,10 +3,13 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
-func logger(inner http.Handler, name string) http.Handler {
+var stdOutLog = log.New(os.Stdout, "", log.LstdFlags)
+
+func httpLogger(inner http.Handler, name string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 
@@ -17,7 +20,7 @@ func logger(inner http.Handler, name string) http.Handler {
 			from = r.RemoteAddr
 		}
 
-		log.Printf(
+		stdOutLog.Printf(
 			"%s %s %s %s %s",
 			from,
 			r.Method,
@@ -27,3 +30,4 @@ func logger(inner http.Handler, name string) http.Handler {
 		)
 	})
 }
+

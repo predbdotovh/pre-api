@@ -29,7 +29,7 @@ func newRouter() *mux.Router {
 				Methods(r.Method).
 				Path(r.Pattern).
 				Name(r.Name).
-				Handler(logger(r.Handler, r.Name))
+				Handler(httpLogger(r.Handler, r.Name))
 		}
 	}
 
@@ -44,7 +44,7 @@ func newRouter() *mux.Router {
 			Methods(r.Method).
 			Path(r.Pattern).
 			Name(r.Name).
-			Handler(logger(r.Handler, r.Name))
+			Handler(httpLogger(r.Handler, r.Name))
 	}
 
 	router.NotFoundHandler = http.HandlerFunc(notFound)

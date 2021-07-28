@@ -292,6 +292,9 @@ None
 | json key | type      | content                       |
 | -------- | --------- | ----------------------------- |
 | rowCount | int       | Count of rows returned        |
+| offset   | int       | Row count offset requested    |
+| reqCount | int       | Row count requested           |
+| total    | int       | Total matching rows           |
 | time     | float     | Request internal duration     |
 | rows     | []team    | Array of [teams](#team)       |
 

@@ -30,6 +30,9 @@ type apiStatsData struct {
 type apiTeamsData struct {
 	RowCount int       `json:"rowCount"`
 	Rows     []teamRow `json:"rows"`
+	Offset   int       `json:"offset"`
+	ReqCount int       `json:"reqCount"`
+	Total    int       `json:"total"`
 	Time     float64   `json:"time"`
 }
 

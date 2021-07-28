@@ -161,6 +161,9 @@ func teamsHandlerV1(w http.ResponseWriter, _ *http.Request) {
 	data := &apiTeamsData{
 		RowCount: len(rows),
 		Rows:     rows,
+		Offset:   0,
+		ReqCount: maxListedTeams,
+		Total:    len(rows),
 		Time:     time.Since(t).Seconds(),
 	}
 

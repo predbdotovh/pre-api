@@ -319,14 +319,14 @@ func rssHandlerV1(w http.ResponseWriter, r *http.Request) {
 
 	feed := &feeds.Feed{
 		Title:   "PreDB",
-		Link:    &feeds.Link{Href: "https://predb.ovh/"},
+		Link:    &feeds.Link{Href: fmt.Sprintf("https://%s/", hostname)},
 		Created: time.Now(),
 	}
 
 	for _, row := range data.Rows {
 		feed.Items = append(feed.Items, &feeds.Item{
 			Title:       row.Name,
-			Link:        &feeds.Link{Href: fmt.Sprintf("https://predb.ovh/?id=%d", row.ID)},
+			Link:        &feeds.Link{Href: fmt.Sprintf("https://%s/?id=%d", hostname, row.ID)},
 			Description: fmt.Sprintf("Cat:%s | Genre:%s | Size:%0.fMB | Files:%d | ID:%d", row.Cat, row.Genre, row.Size, row.Files, row.ID),
 			Created:     time.Unix(int64(row.PreAt), 0),
 		})

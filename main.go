@@ -11,9 +11,11 @@ import (
 
 var sphinx *sql.DB
 var mysql *sql.DB
+var hostname string
 
 func main() {
-	sphinxDatabase := getEnv("SPHINX_DATABASE", "tcp(127.0.0.1:9306)/?interpolateParams=true")
+	hostname := getEnv("HOSTNAME", "example.com")
+	sphinxDatabase := getEnv("SEARCH_DATABASE", "tcp(127.0.0.1:9306)/?interpolateParams=true")
 	nukesDatabase := getEnv("NUKES_DATABASE", "")
 	listenAddr := getEnv("LISTEN_ADDRESS", "127.0.0.1:8088")
 

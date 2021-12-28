@@ -9,8 +9,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const hostname = "predb.ovh"
-
 func newRouter() *mux.Router {
 	backendUpdates = make(chan triggerAction)
 	go backendPump()

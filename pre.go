@@ -52,7 +52,7 @@ func scanPresRows(rows *sql.Rows, appendNukes bool) []preRow {
 }
 
 func getPre(db *sql.DB, preID int, withNuke bool) (*preRow, error) {
-	sqlQuery := fmt.Sprintf("SELECT %s FROM %s WHERE id = ? OPTION reverse_scan = 1", preColumns, sphinxTable)
+	sqlQuery := fmt.Sprintf("SELECT %s FROM %s WHERE id = ?", preColumns, sphinxTable)
 
 	var r preRow
 
@@ -70,7 +70,7 @@ func getPre(db *sql.DB, preID int, withNuke bool) (*preRow, error) {
 }
 
 func getPresById(tx *sql.Tx, preID int, withNuke bool) ([]preRow, error) {
-	sqlQuery := fmt.Sprintf("SELECT %s FROM %s WHERE id = ? OPTION reverse_scan = 1", preColumns, sphinxTable)
+	sqlQuery := fmt.Sprintf("SELECT %s FROM %s WHERE id = ?", preColumns, sphinxTable)
 
 	var r preRow
 
@@ -88,7 +88,7 @@ func getPresById(tx *sql.Tx, preID int, withNuke bool) ([]preRow, error) {
 }
 
 func searchPres(tx *sql.Tx, q string, offsetInt, countInt int, withNukes bool) ([]preRow, error) {
-	sqlQuery := fmt.Sprintf("SELECT %s FROM %s WHERE MATCH(?) ORDER BY id DESC LIMIT %d,%d OPTION reverse_scan = 1", preColumns, sphinxTable, offsetInt, countInt)
+	sqlQuery := fmt.Sprintf("SELECT %s FROM %s WHERE MATCH(?) ORDER BY id DESC LIMIT %d,%d", preColumns, sphinxTable, offsetInt, countInt)
 
 	if offsetInt+countInt > defaultMaxMatches {
 		sqlQuery += ", max_matches = " + strconv.Itoa(offsetInt+countInt)
@@ -104,7 +104,7 @@ func searchPres(tx *sql.Tx, q string, offsetInt, countInt int, withNukes bool) (
 }
 
 func latestPres(tx *sql.Tx, offsetInt, countInt int, withNukes bool) ([]preRow, error) {
-	sqlQuery := fmt.Sprintf("SELECT %s FROM %s ORDER BY id DESC LIMIT %d,%d OPTION reverse_scan = 1", preColumns, sphinxTable, offsetInt, countInt)
+	sqlQuery := fmt.Sprintf("SELECT %s FROM %s ORDER BY id DESC LIMIT %d,%d", preColumns, sphinxTable, offsetInt, countInt)
 
 	if offsetInt+countInt > defaultMaxMatches {
 		sqlQuery += ", max_matches = " + strconv.Itoa(offsetInt+countInt)

@@ -8,81 +8,123 @@ import (
 )
 
 func newMQ(amqpHost string) {
-	if amqpHost != "" {
-		conn, err := amqp.Dial(amqpHost)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer conn.Close()
+	if amqpHost == "" {
+		return
+	}
 
-		ch, err := conn.Channel()
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer ch.Close()
+	conn, err := amqp.Dial(amqpHost)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// defer conn.Close()
 
-		q, err := ch.QueueDeclare(
-			"pre-releases",
-			false,
-			false,
-			false,
-			false,
-			nil,
-		)
-		if err != nil {
-			log.Fatal(err)
-		}
+	ch, err := conn.Channel()
+	if err != nil {
+		log.Fatal(err)
+	}
+	// defer ch.Close()
 
-		msgs, err := ch.Consume(
-			q.Name,
-			"pre-api",
-			true,
-			false,
-			false,
-			false,
-			nil,
-		)
-		if err != nil {
-			log.Fatal(err)
-		}
+	err = ch.ExchangeDeclare(
+		"predb",
+		"fanout",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-		go func() {
-			for d := range msgs {
-				switch d.RoutingKey {
-				case "pre.insert":
-					fallthrough
-				case "pre.update":
-					fallthrough
-				case "pre.delete":
-					var p preRow
-					err := json.Unmarshal(d.Body, &p)
-					if err != nil {
-						log.Println(err)
-						return
-					}
+	q, err := ch.QueueDeclare(
+		"pre-releases",
+		false,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-					p.proc()
-					backendUpdates <- triggerAction{Action: strings.Split(d.RoutingKey, ".")[1], Row: &p}
-					break
-				case "nuke.insert":
-					var n nuke
-					err := json.Unmarshal(d.Body, &n)
-					if err != nil {
-						log.Println(err)
-						return
-					}
+	err = ch.QueueBind(
+		q.Name,
+		"",
+		"predb",
+		false,
+		nil,
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-					p, err := getPre(sphinx, n.PreID, false)
-					if err != nil {
-						log.Println(err)
-						return
-					}
+	msgs, err := ch.Consume(
+		q.Name,
+		"pre-api",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-					p.setNuke(&n)
-					backendUpdates <- triggerAction{Action: n.Type, Row: p}
-					break
+	go mqRun(msgs)
+}
+
+func mqRun(msgs <-chan amqp.Delivery) {
+	for d := range msgs {
+		log.Println(d.RoutingKey)
+		switch d.RoutingKey {
+		case "pre.insert":
+			fallthrough
+		case "pre.update":
+			fallthrough
+		case "pre.delete":
+			var p preRow
+			err := json.Unmarshal(d.Body, &p)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+
+			p.proc()
+			if d.RoutingKey == "pre.delete" {
+				_, err = p.deleteFromIndex()
+				if err != nil {
+					log.Println(err)
+					return
+				}
+			} else {
+				_, err = p.insertOrUpdateIndex()
+				if err != nil {
+					log.Println(err)
+					return
 				}
 			}
-		}()
+			backendUpdates <- triggerAction{Action: strings.Split(d.RoutingKey, ".")[1], Row: &p}
+			break
+		case "nuke.insert":
+			var n nuke
+			err := json.Unmarshal(d.Body, &n)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+
+			p, err := getPre(sphinx, n.PreID, false)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+
+			p.setNuke(&n)
+			backendUpdates <- triggerAction{Action: n.Type, Row: p}
+			break
+		}
 	}
 }

@@ -4,7 +4,9 @@ import (
 	"database/sql"
 )
 
-const sphinxTable = "pre_plain, pre_rt"
+const realTimeIndex = "pre_rt"
+const plainIndex = "pre_plain"
+const sphinxTable = plainIndex + ", " + realTimeIndex
 
 func sphinxMeta(tx *sql.Tx) (map[string]string, error) {
 	sqlRows, err := tx.Query("SHOW META")

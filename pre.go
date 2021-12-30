@@ -133,3 +133,25 @@ func (p *preRow) setNuke(n *nuke) {
 		p.Nuke = n
 	}
 }
+
+func (p *preRow) insertOrUpdateIndex() (int64, error) {
+	sqlQuery := fmt.Sprintf("REPLACE INTO %s (%s) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", realTimeIndex, preColumns)
+
+	res, err := sphinx.Exec(sqlQuery, p.ID, p.Name, p.Team, p.Cat, p.Genre, p.URL, p.Size, p.Files, p.PreAt)
+	if err != nil {
+		return 0, err
+	}
+
+	return res.RowsAffected()
+}
+
+func (p *preRow) deleteFromIndex() (int64, error) {
+	sqlQuery := fmt.Sprintf("DELETE FROM %s WHERE id = ?", realTimeIndex)
+
+	res, err := sphinx.Exec(sqlQuery, p.ID)
+	if err != nil {
+		return 0, err
+	}
+
+	return res.RowsAffected()
+}

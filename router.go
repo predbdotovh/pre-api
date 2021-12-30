@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func newRouter() *mux.Router {
+func newRouter(hostname string) *mux.Router {
 	backendUpdates = make(chan triggerAction)
 	go backendPump()
 

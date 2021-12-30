@@ -15,6 +15,7 @@ var hostname string
 
 func main() {
 	hostname := getEnv("HOSTNAME", "example.com")
+	amqpHost := getEnv("AMQP_HOST", "")
 	sphinxDatabase := getEnv("SEARCH_DATABASE", "tcp(127.0.0.1:9306)/?interpolateParams=true")
 	nukesDatabase := getEnv("NUKES_DATABASE", "")
 	listenAddr := getEnv("LISTEN_ADDRESS", "127.0.0.1:8088")
@@ -22,7 +23,8 @@ func main() {
 	sphinx = newMysql(sphinxDatabase)
 	mysql = newMysql(nukesDatabase)
 
-	router := newRouter()
+	router := newRouter(hostname)
+	newMQ(amqpHost)
 
 	log.Fatal(http.ListenAndServe(listenAddr, router))
 }

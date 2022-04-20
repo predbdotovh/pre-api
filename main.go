@@ -14,7 +14,7 @@ var mysql *sql.DB
 var hostname string
 
 func main() {
-	hostname := getEnv("HOSTNAME", "example.com")
+	hostname = getEnv("HOSTNAME", "example.com")
 	amqpHost := getEnv("AMQP_HOST", "")
 	sphinxDatabase := getEnv("SEARCH_DATABASE", "tcp(127.0.0.1:9306)/?interpolateParams=true")
 	nukesDatabase := getEnv("NUKES_DATABASE", "")

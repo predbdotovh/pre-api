@@ -91,7 +91,7 @@ func searchPres(tx *sql.Tx, q string, offsetInt, countInt int, withNukes bool) (
 	sqlQuery := fmt.Sprintf("SELECT %s FROM %s WHERE MATCH(?) ORDER BY id DESC LIMIT %d,%d", preColumns, sphinxTable, offsetInt, countInt)
 
 	if offsetInt+countInt > defaultMaxMatches {
-		sqlQuery += ", max_matches = " + strconv.Itoa(offsetInt+countInt)
+		sqlQuery += " OPTION max_matches = " + strconv.Itoa(offsetInt+countInt)
 	}
 
 	sqlRows, err := tx.Query(sqlQuery, replacer.Replace(q))
@@ -107,7 +107,7 @@ func latestPres(tx *sql.Tx, offsetInt, countInt int, withNukes bool) ([]preRow, 
 	sqlQuery := fmt.Sprintf("SELECT %s FROM %s ORDER BY id DESC LIMIT %d,%d", preColumns, sphinxTable, offsetInt, countInt)
 
 	if offsetInt+countInt > defaultMaxMatches {
-		sqlQuery += ", max_matches = " + strconv.Itoa(offsetInt+countInt)
+		sqlQuery += " OPTION max_matches = " + strconv.Itoa(offsetInt+countInt)
 	}
 
 	sqlRows, err := tx.Query(sqlQuery)
